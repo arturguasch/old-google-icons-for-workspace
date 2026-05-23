@@ -1,0 +1,118 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_extName__",
+  "version": "1.0.0",
+  "description": "__MSG_extDescription__",
+  "icons": {
+    "16": "extension_icons/icon-16.png",
+    "32": "extension_icons/icon-32.png",
+    "48": "extension_icons/icon-48.png",
+    "128": "extension_icons/icon-128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://calendar.google.com/*",
+        "https://chat.google.com/*",
+        "https://docs.google.com/*",
+        "https://docs.google.com/forms/*",
+        "https://drive.google.com/*",
+        "https://keep.google.com/*",
+        "https://mail.google.com/*",
+        "https://maps.google.com/*",
+        "https://meet.google.com/*",
+        "https://www.google.com/maps*",
+        "https://www.google.com/maps/*"
+      ],
+      "js": [
+        "favicon.js"
+      ],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://calendar.google.com/*",
+        "https://chat.google.com/*",
+        "https://docs.google.com/*",
+        "https://docs.google.com/forms/*",
+        "https://drive.google.com/*",
+        "https://keep.google.com/*",
+        "https://mail.google.com/*",
+        "https://maps.google.com/*",
+        "https://meet.google.com/*",
+        "https://www.google.com/maps*",
+        "https://www.google.com/maps/*"
+      ],
+      "js": [
+        "app-header-icon-only.js"
+      ],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://*.google.cat/*",
+        "https://*.google.com/*",
+        "https://ogs.google.com/*"
+      ],
+      "js": [
+        "launcher-grid.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true,
+      "match_about_blank": true,
+      "match_origin_as_fallback": true
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "icons/*.png",
+        "icons/*.svg",
+        "icons/*.webp"
+      ],
+      "matches": [
+        "https://*.google.cat/*",
+        "https://*.google.com/*",
+        "https://calendar.google.com/*",
+        "https://chat.google.com/*",
+        "https://docs.google.com/*",
+        "https://drive.google.com/*",
+        "https://keep.google.com/*",
+        "https://mail.google.com/*",
+        "https://maps.google.com/*",
+        "https://meet.google.com/*",
+        "https://ogs.google.com/*",
+        "https://ssl.gstatic.com/*",
+        "https://www.google.com/*",
+        "https://www.gstatic.com/*"
+      ]
+    }
+  ],
+  "permissions": [
+    "alarms",
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "https://*.google.cat/*",
+    "https://*.google.com/*",
+    "https://calendar.google.com/*",
+    "https://docs.google.com/*",
+    "https://maps.google.com/*",
+    "https://ssl.gstatic.com/*",
+    "https://www.google.com/*",
+    "https://www.google.com/maps/*",
+    "https://www.gstatic.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "short_name": "__MSG_extShortName__",
+  "default_locale": "en",
+  "action": {
+    "default_icon": {
+      "16": "extension_icons/icon-16.png",
+      "32": "extension_icons/icon-32.png",
+      "48": "extension_icons/icon-48.png"
+    }
+  }
+}

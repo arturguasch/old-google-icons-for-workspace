@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "Old Google Icons for Workspace",
+    "description": "Main extension name"
+  },
+  "extShortName": {
+    "message": "Old Google Icons",
+    "description": "Short name"
+  },
+  "extDescription": {
+    "message": "Restore classic 2020-style Google Workspace icons for Gmail, Calendar, Drive, Docs, Sheets, Slides, Meet, Chat, Keep, Maps and Forms.",
+    "description": "Chrome Web Store short description"
+  }
+}
