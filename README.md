@@ -49,3 +49,10 @@ Old Google Icons for Workspace is not affiliated with, endorsed by, sponsored by
 ## Extension icon
 
 The extension includes a custom icon inspired by the transition between modern and classic Google Drive branding.
+
+
+## Localized names
+
+- English: Old Google Icons for Workspace
+- Spanish: Iconos antiguos de Google para Workspace
+- Catalan: Icones antigues de Google per a Workspace

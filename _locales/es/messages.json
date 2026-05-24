@@ -1,6 +1,6 @@
 {
   "extName": {
-    "message": "Old Google Icons for Workspace",
+    "message": "Iconos antiguos de Google para Workspace",
     "description": "Nombre principal. Alternativa secundaria: Iconos antiguos de Google para Workspace"
   },
   "extShortName": {
@@ -8,7 +8,7 @@
     "description": "Nombre corto en castellano"
   },
   "extDescription": {
-    "message": "Restaura los iconos clásicos de Google Workspace para Gmail, Calendar, Drive, Docs, Sheets, Slides, Meet, Chat, Keep, Maps y Forms.",
+    "message": "Restaura iconos clásicos para Gmail, Calendar, Drive, Docs, Sheets, Slides, Meet, Chat, Keep, Maps y Forms.",
     "description": "Descripción corta en castellano"
   },
   "secondaryTitle": {
