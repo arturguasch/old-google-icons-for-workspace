@@ -8,7 +8,7 @@
     "description": "Short name"
   },
   "extDescription": {
-    "message": "Restore classic icons for Gmail, Calendar, Drive, Docs, Sheets, Slides, Meet, Chat, Keep, Maps and Forms.",
+    "message": "Restore classic Google Workspace icons and favicons.",
     "description": "Chrome Web Store short description"
   }
 }

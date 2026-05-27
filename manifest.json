@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "__MSG_extDescription__",
   "icons": {
     "16": "extension_icons/icon-16.png",
@@ -56,6 +56,20 @@
       ],
       "js": [
         "launcher-grid.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true,
+      "match_about_blank": true,
+      "match_origin_as_fallback": true
+    },
+    {
+      "matches": [
+        "https://*.google.cat/*",
+        "https://*.google.com/*",
+        "https://ogs.google.com/*"
+      ],
+      "js": [
+        "workspace-side-panel-icons.js"
       ],
       "run_at": "document_start",
       "all_frames": true,

@@ -1,0 +1,16 @@
+Iconos antiguos de Google para Workspace recupera el estilo clásico de iconos de Google Workspace usado en años anteriores.
+
+Vuelve a usar iconos y favicons antiguos en aplicaciones compatibles para mejorar la identificación visual y reducir la confusión causada por los diseños unificados más recientes.
+
+Funciones:
+• Iconos clásicos en pestañas
+• Iconos restaurados en el lanzador de aplicaciones
+• Icono dinámico de calendario
+• Compatible con modo claro y oscuro
+• Ligera y totalmente local
+
+Ideal para usuarios que prefieren el aspecto anterior de Workspace y quieren reconocer mejor sus aplicaciones.
+
+Esta extensión no recopila datos personales.
+
+No afiliada ni respaldada por Google.

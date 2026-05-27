@@ -1,0 +1,16 @@
+Old Google Icons for Workspace restores the classic Google Workspace icon style used in previous years.
+
+Bring back older-style icons and favicons across supported Google apps to improve visual recognition and reduce confusion caused by newer unified designs.
+
+Features:
+• Classic-style tab icons
+• Restored app launcher icons
+• Dynamic calendar date icon
+• Light and dark mode support
+• Lightweight and fully local
+
+Perfect for users who prefer the older Workspace appearance and want apps to be easier to recognize again.
+
+This extension does not collect personal data.
+
+Not affiliated with or endorsed by Google.

@@ -1,7 +1,6 @@
 (() => {
   // Classic Workspace Icons, header icon only.
-  // v3.0: si el logo original és només icona, l'amaga i posa el nostre amb fons transparent.
-  // Només usa un pegat amb color de fons quan Google posa icona i text en una mateixa imatge.
+  // v3.2: detecció ampliada només per Docs, Sheets i Slides. Evita parpelleig a la resta d'apps.
 
   const APPS = {
     gmail: {
@@ -133,12 +132,18 @@
 
   const CFG = APPS[APP];
   const OVERLAY_ID = `classic-workspace-${APP}-header-icon-overlay`;
+  const USE_EXTENDED_DETECTION = ["docs", "sheets", "slides", "forms"].includes(APP);
 
   let scheduled = false;
   let lastDay = null;
   let midnightTimer = null;
+  let missingTargetCount = 0;
 
   function injectStyle() {
+    if (USE_EXTENDED_DETECTION && document.documentElement) {
+      document.documentElement.setAttribute("data-cwi-header-css-detection", "1");
+    }
+
     if (document.getElementById("classic-workspace-header-icon-style-v30")) return;
 
     const style = document.createElement("style");
@@ -153,6 +158,17 @@
       [data-cwi-header-original-lockup="1"] * {
         opacity: 0 !important;
         visibility: hidden !important;
+      }
+      html[data-cwi-header-css-detection="1"] [data-cwi-header-original-icon="1"]::before,
+      html[data-cwi-header-css-detection="1"] [data-cwi-header-original-icon="1"]::after,
+      html[data-cwi-header-css-detection="1"] [data-cwi-header-original-lockup="1"]::before,
+      html[data-cwi-header-css-detection="1"] [data-cwi-header-original-lockup="1"]::after {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        background-image: none !important;
+        -webkit-mask-image: none !important;
+        mask-image: none !important;
+        content: none !important;
       }
       .cwi-gmail-lockup-v32 {
         display: inline-flex !important;
@@ -293,6 +309,29 @@
     return normalized(parts.filter(Boolean).join(" "));
   }
 
+  function meaningfulInnerText(el) {
+    return String(el.innerText || el.textContent || "").trim();
+  }
+
+  function styleLooksLikeIcon(el) {
+    try {
+      const style = getComputedStyle(el);
+      if (style.backgroundImage && style.backgroundImage !== "none") return true;
+      if (style.maskImage && style.maskImage !== "none") return true;
+      if (style.webkitMaskImage && style.webkitMaskImage !== "none") return true;
+
+      const before = getComputedStyle(el, "::before");
+      const after = getComputedStyle(el, "::after");
+
+      if (before.backgroundImage && before.backgroundImage !== "none") return true;
+      if (after.backgroundImage && after.backgroundImage !== "none") return true;
+      if (before.webkitMaskImage && before.webkitMaskImage !== "none") return true;
+      if (after.webkitMaskImage && after.webkitMaskImage !== "none") return true;
+    } catch (_) {}
+
+    return false;
+  }
+
   function scoreCandidate(el) {
     const rect = el.getBoundingClientRect();
     if (!rectLooksLikeHeaderLogo(rect)) return -1;
@@ -309,6 +348,16 @@
     if (tag === "svg") score += 8;
     if (tag === "image") score += 8;
 
+    if (USE_EXTENDED_DETECTION) {
+      if (styleLooksLikeIcon(el)) score += 16;
+
+      const classAndId = normalized(`${el.className || ""} ${el.id || ""}`);
+      if (/docs.*icon|icon.*docs|product.*icon|app.*icon|logo/.test(classAndId)) score += 14;
+
+      const innerText = meaningfulInnerText(el);
+      if (APP !== "gmail" && innerText.length > 3 && rect.width > 70) score -= 24;
+    }
+
     if (rect.left < 90) score += 10;
     if (rect.top < 70) score += 10;
     if (rect.width <= 80) score += 8;
@@ -321,7 +370,16 @@
   }
 
   function selectorsForApp() {
-    const common = [
+    const common = USE_EXTENDED_DETECTION ? [
+      "img",
+      "svg",
+      "image",
+      "[role='img']",
+      "[class*='docs-icon' i]",
+      "[class*='product-icon' i]",
+      "[class*='app-icon' i]",
+      "[class*='logo' i]"
+    ] : [
       "img",
       "svg",
       "image",
@@ -343,6 +401,27 @@
     return Array.from(new Set([...specific, ...common]));
   }
 
+  function pointCandidates() {
+    if (!USE_EXTENDED_DETECTION) return [];
+
+    const found = new Set();
+    const maxX = Math.min(CFG.maxLeft, Math.max(90, Math.round(window.innerWidth * 0.28)));
+    const maxY = Math.min(CFG.maxTop, 100);
+
+    try {
+      for (let x = 4; x <= maxX; x += 12) {
+        for (let y = 4; y <= maxY; y += 12) {
+          for (const el of document.elementsFromPoint(x, y)) {
+            if (!el || el === document.documentElement || el === document.body) continue;
+            found.add(el);
+          }
+        }
+      }
+    } catch (_) {}
+
+    return Array.from(found);
+  }
+
   function findHeaderLogoElement() {
     let candidates = [];
 
@@ -352,7 +431,7 @@
       } catch (_) {}
     }
 
-    candidates = Array.from(new Set(candidates));
+    candidates = Array.from(new Set(candidates.concat(pointCandidates())));
 
     let best = null;
     let bestScore = -1;
@@ -367,8 +446,16 @@
 
     if (best && bestScore >= CFG.minScore) return best;
 
-    const fallback = Array.from(document.querySelectorAll("img, svg, image, [role='img']"))
+    const fallbackSelector = USE_EXTENDED_DETECTION
+      ? "img, svg, image, [role='img'], [class*='docs-icon' i], [class*='product-icon' i], [class*='app-icon' i], [class*='logo' i]"
+      : "img, svg, image, [role='img']";
+
+    const fallback = Array.from(new Set([
+      ...document.querySelectorAll(fallbackSelector),
+      ...pointCandidates()
+    ]))
       .filter((el) => rectLooksLikeHeaderLogo(el.getBoundingClientRect()))
+      .filter((el) => !USE_EXTENDED_DETECTION || APP === "gmail" || !(meaningfulInnerText(el).length > 3 && el.getBoundingClientRect().width > 70))
       .sort((a, b) => {
         const ar = a.getBoundingClientRect();
         const br = b.getBoundingClientRect();
@@ -393,6 +480,26 @@
 
   function clearOldMarks() {
     clearHeaderMarks();
+  }
+
+  function markOriginal(target, attr) {
+    const iconAttr = "data-cwi-header-original-icon";
+    const lockupAttr = "data-cwi-header-original-lockup";
+
+    document.querySelectorAll("[data-cwi-header-original-icon='1'], [data-cwi-header-original-lockup='1']").forEach((el) => {
+      if (el !== target || !attr) {
+        el.removeAttribute(iconAttr);
+        el.removeAttribute(lockupAttr);
+        return;
+      }
+
+      if (attr === iconAttr) el.removeAttribute(lockupAttr);
+      if (attr === lockupAttr) el.removeAttribute(iconAttr);
+    });
+
+    if (attr && target.getAttribute(attr) !== "1") {
+      target.setAttribute(attr, "1");
+    }
   }
 
   function ensureOverlay() {
@@ -460,26 +567,29 @@
     const overlay = ensureOverlay();
 
     if (!target) {
-      overlay.style.display = "none";
+      missingTargetCount += 1;
+      if (missingTargetCount >= 3) overlay.style.display = "none";
       return;
     }
 
     const rect = target.getBoundingClientRect();
     if (!rectLooksLikeHeaderLogo(rect)) {
-      overlay.style.display = "none";
+      missingTargetCount += 1;
+      if (missingTargetCount >= 3) overlay.style.display = "none";
       return;
     }
 
-    clearOldMarks();
+    missingTargetCount = 0;
 
     const singleIcon = looksLikeSingleIcon(target, rect);
     const gmailLockup = APP === "gmail" && !singleIcon && rect.width > 65;
+    const markAttr = gmailLockup
+      ? "data-cwi-header-original-lockup"
+      : singleIcon
+        ? "data-cwi-header-original-icon"
+        : null;
 
-    if (gmailLockup) {
-      target.setAttribute("data-cwi-header-original-lockup", "1");
-    } else if (singleIcon) {
-      target.setAttribute("data-cwi-header-original-icon", "1");
-    }
+    markOriginal(target, markAttr);
 
     const rawSize = rect.width <= 58 ? Math.min(rect.width, rect.height) : rect.height * 0.84;
     const size = Math.max(CFG.sizeMin, Math.min(CFG.sizeMax, Math.round(rawSize)));
@@ -546,12 +656,22 @@
     apply();
     scheduleMidnightRefresh();
 
-    const observer = new MutationObserver(() => schedule(120));
+    const observer = new MutationObserver((mutations) => {
+      const onlyOurOverlay = mutations.every((mutation) => {
+        const target = mutation.target;
+        return target?.id === OVERLAY_ID || target?.id === "classic-workspace-header-icon-style-v30";
+      });
+
+      if (!onlyOurOverlay) schedule(160);
+    });
+
     observer.observe(document.documentElement, {
       childList: true,
       subtree: true,
       attributes: true,
-      attributeFilter: ["src", "srcset", "href", "alt", "aria-label", "title", "style", "class"]
+      attributeFilter: USE_EXTENDED_DETECTION
+        ? ["src", "srcset", "href", "alt", "aria-label", "title", "style", "class"]
+        : ["src", "srcset", "href", "alt", "aria-label", "title"]
     });
 
     [200, 500, 1000, 2000, 4000, 7000].forEach((ms) => setTimeout(apply, ms));

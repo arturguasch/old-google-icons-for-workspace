@@ -8,7 +8,7 @@
     "description": "Nombre corto en castellano"
   },
   "extDescription": {
-    "message": "Restaura iconos clásicos para Gmail, Calendar, Drive, Docs, Sheets, Slides, Meet, Chat, Keep, Maps y Forms.",
+    "message": "Restaura iconos y favicons clásicos de Google Workspace.",
     "description": "Descripción corta en castellano"
   },
   "secondaryTitle": {
