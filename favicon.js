@@ -1,4 +1,32 @@
 (() => {
+
+  function cwiShouldPauseOnThisPage() {
+    const host = location.hostname;
+    const href = location.href.toLowerCase();
+    const path = location.pathname.toLowerCase();
+
+    // Google Calendar import/export/settings is sensitive because it handles local .ics uploads.
+    // The extension only changes visual icons, so it should stay completely inactive there.
+    if (host === "calendar.google.com" && (
+      href.includes("/settings") ||
+      href.includes("settings/export") ||
+      href.includes("settings/import") ||
+      href.includes("/import") ||
+      href.includes("/export")
+    )) return true;
+
+    // Keep broad Google-frame scripts away from Google picker/upload surfaces.
+    if ((host === "docs.google.com" || host === "drive.google.com") && (
+      path.includes("/picker") ||
+      path.includes("/upload") ||
+      href.includes("picker?") ||
+      href.includes("filepicker")
+    )) return true;
+
+    return false;
+  }
+
+  if (cwiShouldPauseOnThisPage()) return;
   const APPS = {
     gmail: { icon: "icons/gmail-classic.svg", hosts: ["mail.google.com"], type: "image/svg+xml" },
     calendar: { hosts: ["calendar.google.com"], hardLock: true },
@@ -38,6 +66,7 @@
   }
 
   function appForCurrentPage() {
+    if (cwiShouldPauseOnThisPage()) return null;
     const host = location.hostname;
     const url = location.href;
 
@@ -64,6 +93,7 @@
   }
 
   function ensureHead(callback) {
+    if (cwiShouldPauseOnThisPage()) return;
     if (document.head) callback();
     else requestAnimationFrame(() => ensureHead(callback));
   }

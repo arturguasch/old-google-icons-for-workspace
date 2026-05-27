@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "__MSG_extDescription__",
   "icons": {
     "16": "extension_icons/icon-16.png",
@@ -27,7 +27,17 @@
       "js": [
         "favicon.js"
       ],
-      "run_at": "document_start"
+      "run_at": "document_start",
+      "exclude_matches": [
+        "https://calendar.google.com/*settings*",
+        "https://calendar.google.com/*import*",
+        "https://calendar.google.com/*export*",
+        "https://docs.google.com/*picker*",
+        "https://drive.google.com/*picker*",
+        "https://calendar.google.com/calendar/*/r/settings/*",
+        "https://docs.google.com/*upload*",
+        "https://drive.google.com/*upload*"
+      ]
     },
     {
       "matches": [
@@ -46,12 +56,29 @@
       "js": [
         "app-header-icon-only.js"
       ],
-      "run_at": "document_start"
+      "run_at": "document_start",
+      "exclude_matches": [
+        "https://calendar.google.com/*settings*",
+        "https://calendar.google.com/*import*",
+        "https://calendar.google.com/*export*",
+        "https://docs.google.com/*picker*",
+        "https://drive.google.com/*picker*",
+        "https://calendar.google.com/calendar/*/r/settings/*",
+        "https://docs.google.com/*upload*",
+        "https://drive.google.com/*upload*"
+      ]
     },
     {
       "matches": [
-        "https://*.google.cat/*",
-        "https://*.google.com/*",
+        "https://mail.google.com/*",
+        "https://drive.google.com/*",
+        "https://docs.google.com/*",
+        "https://keep.google.com/*",
+        "https://meet.google.com/*",
+        "https://chat.google.com/*",
+        "https://maps.google.com/*",
+        "https://www.google.com/*",
+        "https://www.google.cat/*",
         "https://ogs.google.com/*"
       ],
       "js": [
@@ -59,22 +86,39 @@
       ],
       "run_at": "document_start",
       "all_frames": true,
-      "match_about_blank": true,
-      "match_origin_as_fallback": true
+      "exclude_matches": [
+        "https://calendar.google.com/*settings*",
+        "https://calendar.google.com/*import*",
+        "https://calendar.google.com/*export*",
+        "https://docs.google.com/*picker*",
+        "https://drive.google.com/*picker*",
+        "https://calendar.google.com/calendar/*/r/settings/*",
+        "https://docs.google.com/*upload*",
+        "https://drive.google.com/*upload*"
+      ]
     },
     {
       "matches": [
-        "https://*.google.cat/*",
-        "https://*.google.com/*",
-        "https://ogs.google.com/*"
+        "https://mail.google.com/*",
+        "https://drive.google.com/*",
+        "https://docs.google.com/*",
+        "https://calendar.google.com/*"
       ],
       "js": [
         "workspace-side-panel-icons.js"
       ],
       "run_at": "document_start",
       "all_frames": true,
-      "match_about_blank": true,
-      "match_origin_as_fallback": true
+      "exclude_matches": [
+        "https://calendar.google.com/*settings*",
+        "https://calendar.google.com/*import*",
+        "https://calendar.google.com/*export*",
+        "https://docs.google.com/*picker*",
+        "https://drive.google.com/*picker*",
+        "https://calendar.google.com/calendar/*/r/settings/*",
+        "https://docs.google.com/*upload*",
+        "https://drive.google.com/*upload*"
+      ]
     }
   ],
   "web_accessible_resources": [

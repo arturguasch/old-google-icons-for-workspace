@@ -1,4 +1,37 @@
 (() => {
+
+  // Google Calendar import/export is sensitive to DOM observers used by the launcher grid.
+  // The launcher grid can still be handled inside ogs.google.com, so this script stays
+  // completely inactive in the main calendar.google.com document.
+  if (location.hostname === "calendar.google.com") return;
+
+  function cwiShouldPauseOnThisPage() {
+    const host = location.hostname;
+    const href = location.href.toLowerCase();
+    const path = location.pathname.toLowerCase();
+
+    // Google Calendar import/export/settings is sensitive because it handles local .ics uploads.
+    // The extension only changes visual icons, so it should stay completely inactive there.
+    if (host === "calendar.google.com" && (
+      href.includes("/settings") ||
+      href.includes("settings/export") ||
+      href.includes("settings/import") ||
+      href.includes("/import") ||
+      href.includes("/export")
+    )) return true;
+
+    // Keep broad Google-frame scripts away from Google picker/upload surfaces.
+    if ((host === "docs.google.com" || host === "drive.google.com") && (
+      path.includes("/picker") ||
+      path.includes("/upload") ||
+      href.includes("picker?") ||
+      href.includes("filepicker")
+    )) return true;
+
+    return false;
+  }
+  if (cwiShouldPauseOnThisPage()) return;
+
   // Classic Workspace Icons, launcher v3.0.
   // Afegeix Maps i Forms. Calendar continua canviant segons el dia local.
 
@@ -246,7 +279,26 @@ a[data-cwi-launcher-app] [data-cwi-launcher-label-clean="1"]::after {
     return rules.join("\n");
   }
 
+  function cleanupPausedPage() {
+    document.getElementById("cwi-launcher-css-v30")?.remove();
+    document.documentElement?.removeAttribute("data-cwi-launcher-tiles");
+    document.documentElement?.removeAttribute("data-cwi-launcher-hidden-parts");
+    document.documentElement?.removeAttribute("data-cwi-launcher-url");
+    document.querySelectorAll("[data-cwi-launcher-app], [data-cwi-launcher-original-icon], [data-cwi-launcher-original-bg], [data-cwi-launcher-hover-clean], [data-cwi-launcher-label-clean]").forEach((el) => {
+      el.removeAttribute("data-cwi-launcher-app");
+      el.removeAttribute("data-cwi-launcher-original-icon");
+      el.removeAttribute("data-cwi-launcher-original-bg");
+      el.removeAttribute("data-cwi-launcher-hover-clean");
+      el.removeAttribute("data-cwi-launcher-label-clean");
+    });
+  }
+
   function injectCss() {
+    if (cwiShouldPauseOnThisPage()) {
+      cleanupPausedPage();
+      return;
+    }
+
     let style = document.getElementById("cwi-launcher-css-v30");
     if (!style) {
       style = document.createElement("style");
@@ -413,6 +465,11 @@ a[data-cwi-launcher-app] [data-cwi-launcher-label-clean="1"]::after {
   }
 
   function markTiles() {
+    if (cwiShouldPauseOnThisPage()) {
+      cleanupPausedPage();
+      return;
+    }
+
     let count = 0;
     let hiddenParts = 0;
 
@@ -511,6 +568,11 @@ a[data-cwi-launcher-app] [data-cwi-launcher-label-clean="1"]::after {
   }
 
   function start() {
+    if (cwiShouldPauseOnThisPage()) {
+      cleanupPausedPage();
+      return;
+    }
+
     injectCss();
     markTiles();
     scheduleMidnightRefresh();
@@ -537,6 +599,8 @@ a[data-cwi-launcher-app] [data-cwi-launcher-label-clean="1"]::after {
 
   window.addEventListener("load", () => schedule(100), { once: true });
   window.addEventListener("resize", () => schedule(50));
+  window.addEventListener("popstate", () => schedule(80));
+  window.addEventListener("hashchange", () => schedule(80));
   window.addEventListener("scroll", () => schedule(20), true);
   window.addEventListener("focus", () => schedule(60));
   document.addEventListener("visibilitychange", () => {

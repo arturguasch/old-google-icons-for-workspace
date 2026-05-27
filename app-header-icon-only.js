@@ -1,4 +1,32 @@
 (() => {
+
+  function cwiShouldPauseOnThisPage() {
+    const host = location.hostname;
+    const href = location.href.toLowerCase();
+    const path = location.pathname.toLowerCase();
+
+    // Google Calendar import/export/settings is sensitive because it handles local .ics uploads.
+    // The extension only changes visual icons, so it should stay completely inactive there.
+    if (host === "calendar.google.com" && (
+      href.includes("/settings") ||
+      href.includes("settings/export") ||
+      href.includes("settings/import") ||
+      href.includes("/import") ||
+      href.includes("/export")
+    )) return true;
+
+    // Keep broad Google-frame scripts away from Google picker/upload surfaces.
+    if ((host === "docs.google.com" || host === "drive.google.com") && (
+      path.includes("/picker") ||
+      path.includes("/upload") ||
+      href.includes("picker?") ||
+      href.includes("filepicker")
+    )) return true;
+
+    return false;
+  }
+  if (cwiShouldPauseOnThisPage()) return;
+
   // Classic Workspace Icons, header icon only.
   // v3.2: detecció ampliada només per Docs, Sheets i Slides. Evita parpelleig a la resta d'apps.
 
@@ -558,8 +586,20 @@
     span.style.color = gmailTextColor(target);
   }
 
+  function cleanupPausedPage() {
+    document.getElementById(OVERLAY_ID)?.remove();
+    document.getElementById("classic-workspace-header-icon-style-v30")?.remove();
+    clearHeaderMarks();
+    document.documentElement?.removeAttribute("data-cwi-header-css-detection");
+  }
+
   function apply() {
     if (!document.body) return;
+
+    if (cwiShouldPauseOnThisPage()) {
+      cleanupPausedPage();
+      return;
+    }
 
     injectStyle();
 
@@ -689,6 +729,8 @@
 
   window.addEventListener("load", () => schedule(150), { once: true });
   window.addEventListener("resize", () => schedule(50));
+  window.addEventListener("popstate", () => schedule(80));
+  window.addEventListener("hashchange", () => schedule(80));
   window.addEventListener("focus", () => {
     checkDay();
     schedule(100);
