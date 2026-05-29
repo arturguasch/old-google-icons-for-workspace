@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "__MSG_extDescription__",
   "icons": {
     "16": "extension_icons/icon-16.png",
@@ -25,6 +25,7 @@
         "https://www.google.com/maps/*"
       ],
       "js": [
+        "cwi-settings.js",
         "favicon.js"
       ],
       "run_at": "document_start",
@@ -54,6 +55,7 @@
         "https://www.google.com/maps/*"
       ],
       "js": [
+        "cwi-settings.js",
         "app-header-icon-only.js"
       ],
       "run_at": "document_start",
@@ -82,6 +84,7 @@
         "https://ogs.google.com/*"
       ],
       "js": [
+        "cwi-settings.js",
         "launcher-grid.js"
       ],
       "run_at": "document_start",
@@ -105,6 +108,7 @@
         "https://calendar.google.com/*"
       ],
       "js": [
+        "cwi-settings.js",
         "workspace-side-panel-icons.js"
       ],
       "run_at": "document_start",
@@ -148,7 +152,8 @@
   ],
   "permissions": [
     "alarms",
-    "declarativeNetRequest"
+    "declarativeNetRequest",
+    "storage"
   ],
   "host_permissions": [
     "https://*.google.cat/*",
@@ -171,6 +176,7 @@
       "16": "extension_icons/icon-16.png",
       "32": "extension_icons/icon-32.png",
       "48": "extension_icons/icon-48.png"
-    }
+    },
+    "default_popup": "popup.html"
   }
 }

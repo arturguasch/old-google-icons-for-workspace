@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Old Google Icons for Workspace</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main class="panel">
+    <section class="hero">
+      <img src="extension_icons/icon-48.png" alt="" class="hero-icon">
+      <div>
+        <h1>Old Google Icons</h1>
+        <p>Classic icons for Google Workspace</p>
+      </div>
+    </section>
+
+    <section class="card status-card">
+      <div>
+        <h2>Extension status</h2>
+        <p>Enable or pause all icon replacements.</p>
+      </div>
+      <label class="switch" aria-label="Enable extension">
+        <input type="checkbox" id="masterToggle">
+        <span></span>
+      </label>
+    </section>
+
+    <section class="card">
+      <div class="section-title">
+        <h2>Apps</h2>
+        <span id="enabledCount">0 enabled</span>
+      </div>
+      <div id="appsList" class="apps-list"></div>
+    </section>
+
+    <section class="card links-card">
+      <button type="button" id="supportButton" class="primary-button">Support development</button>
+      <button type="button" id="reportButton" class="secondary-button">Report an issue</button>
+    </section>
+
+    <section class="privacy">
+      <p class="privacy-copy"><strong>Privacy:</strong> we do not collect, sell or share personal data. This extension <strong>is free and privacy-friendly</strong>, so any <strong>optional support is greatly appreciated</strong>. Read the <a id="privacyLink" href="https://arturguasch.github.io/old-google-icons-for-workspace/" target="_blank" rel="noopener noreferrer">privacy policy</a>.</p>
+      <p class="version">Version <span id="versionText">1.0.3</span></p>
+    </section>
+  </main>
+
+  <script src="cwi-settings.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

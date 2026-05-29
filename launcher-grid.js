@@ -98,6 +98,16 @@
   let lastDay = null;
   let scheduled = false;
   let midnightTimer = null;
+  let observer = null;
+  let started = false;
+  const CWI_SETTINGS = globalThis.__CWI_SETTINGS__;
+  let cwiOptions = null;
+  if (!CWI_SETTINGS) return;
+
+  function enabledItems() {
+    if (!cwiOptions || cwiOptions.enabled === false) return [];
+    return APPS.filter((item) => CWI_SETTINGS.appEnabled(item.app, cwiOptions));
+  }
 
   function pad2(value) {
     return String(value).padStart(2, "0");
@@ -192,7 +202,7 @@ a[data-cwi-launcher-app] [data-cwi-launcher-hover-clean="1"]::after {
 }
 `);
 
-    for (const item of APPS) {
+    for (const item of enabledItems()) {
       const icon = cssEscapeUrl(iconUrl(item));
 
       rules.push(`
@@ -284,6 +294,7 @@ a[data-cwi-launcher-app] [data-cwi-launcher-label-clean="1"]::after {
     document.documentElement?.removeAttribute("data-cwi-launcher-tiles");
     document.documentElement?.removeAttribute("data-cwi-launcher-hidden-parts");
     document.documentElement?.removeAttribute("data-cwi-launcher-url");
+    document.documentElement?.removeAttribute("data-cwi-launcher-version");
     document.querySelectorAll("[data-cwi-launcher-app], [data-cwi-launcher-original-icon], [data-cwi-launcher-original-bg], [data-cwi-launcher-hover-clean], [data-cwi-launcher-label-clean]").forEach((el) => {
       el.removeAttribute("data-cwi-launcher-app");
       el.removeAttribute("data-cwi-launcher-original-icon");
@@ -294,10 +305,12 @@ a[data-cwi-launcher-app] [data-cwi-launcher-label-clean="1"]::after {
   }
 
   function injectCss() {
-    if (cwiShouldPauseOnThisPage()) {
+    if (cwiShouldPauseOnThisPage() || enabledItems().length === 0) {
       cleanupPausedPage();
       return;
     }
+
+    document.documentElement.setAttribute("data-cwi-launcher-version", VERSION);
 
     let style = document.getElementById("cwi-launcher-css-v30");
     if (!style) {
@@ -465,7 +478,7 @@ a[data-cwi-launcher-app] [data-cwi-launcher-label-clean="1"]::after {
   }
 
   function markTiles() {
-    if (cwiShouldPauseOnThisPage()) {
+    if (cwiShouldPauseOnThisPage() || enabledItems().length === 0) {
       cleanupPausedPage();
       return;
     }
@@ -473,7 +486,7 @@ a[data-cwi-launcher-app] [data-cwi-launcher-label-clean="1"]::after {
     let count = 0;
     let hiddenParts = 0;
 
-    for (const item of APPS) {
+    for (const item of enabledItems()) {
       for (const selector of item.selectors) {
         const nodes = Array.from(document.querySelectorAll(selector));
 
@@ -491,7 +504,7 @@ a[data-cwi-launcher-app] [data-cwi-launcher-label-clean="1"]::after {
 
     // Marca possibles contenidors del label o hover inferior.
     // Ho fem per tots els iconos canviats.
-    for (const item of APPS) {
+    for (const item of enabledItems()) {
       for (const selector of item.selectors) {
         const nodes = Array.from(document.querySelectorAll(selector));
 
@@ -567,9 +580,22 @@ a[data-cwi-launcher-app] [data-cwi-launcher-label-clean="1"]::after {
     }, delay);
   }
 
+  function stop() {
+    started = false;
+    if (observer) {
+      observer.disconnect();
+      observer = null;
+    }
+    if (midnightTimer) {
+      clearTimeout(midnightTimer);
+      midnightTimer = null;
+    }
+    cleanupPausedPage();
+  }
+
   function start() {
-    if (cwiShouldPauseOnThisPage()) {
-      cleanupPausedPage();
+    if (cwiShouldPauseOnThisPage() || enabledItems().length === 0) {
+      stop();
       return;
     }
 
@@ -577,7 +603,10 @@ a[data-cwi-launcher-app] [data-cwi-launcher-label-clean="1"]::after {
     markTiles();
     scheduleMidnightRefresh();
 
-    const observer = new MutationObserver(() => schedule(60));
+    if (started) return;
+    started = true;
+
+    observer = new MutationObserver(() => schedule(60));
     observer.observe(document.documentElement, {
       childList: true,
       subtree: true,
@@ -586,26 +615,47 @@ a[data-cwi-launcher-app] [data-cwi-launcher-label-clean="1"]::after {
     });
 
     [100, 250, 500, 1000, 2000, 4000].forEach((ms) => setTimeout(() => {
+      if (enabledItems().length === 0 || cwiShouldPauseOnThisPage()) {
+        cleanupPausedPage();
+        return;
+      }
       injectCss();
       markTiles();
     }, ms));
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", start, { once: true });
-  } else {
-    start();
-  }
+  CWI_SETTINGS.getOptions().then((options) => {
+    cwiOptions = CWI_SETTINGS.normalizeOptions(options);
 
-  window.addEventListener("load", () => schedule(100), { once: true });
-  window.addEventListener("resize", () => schedule(50));
-  window.addEventListener("popstate", () => schedule(80));
-  window.addEventListener("hashchange", () => schedule(80));
-  window.addEventListener("scroll", () => schedule(20), true);
-  window.addEventListener("focus", () => schedule(60));
-  document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) schedule(60);
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", start, { once: true });
+    } else {
+      start();
+    }
+
+    window.addEventListener("load", () => schedule(100), { once: true });
+    window.addEventListener("resize", () => schedule(50));
+    window.addEventListener("popstate", () => schedule(80));
+    window.addEventListener("hashchange", () => schedule(80));
+    window.addEventListener("scroll", () => schedule(20), true);
+    window.addEventListener("focus", () => schedule(60));
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) schedule(60);
+    });
+
+    chrome.storage?.onChanged?.addListener((changes, areaName) => {
+      if (areaName !== "sync" || !changes.cwiOptions) return;
+      cwiOptions = CWI_SETTINGS.normalizeOptions(changes.cwiOptions.newValue);
+
+      cleanupPausedPage();
+      if (enabledItems().length === 0 || cwiShouldPauseOnThisPage()) {
+        stop();
+      } else {
+        start();
+        schedule(20);
+      }
+    });
+
+    setInterval(checkDay, 60 * 1000);
   });
-
-  setInterval(checkDay, 60 * 1000);
 })();

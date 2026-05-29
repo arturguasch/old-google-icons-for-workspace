@@ -158,7 +158,19 @@
   const APP = currentApp();
   if (!APP) return;
 
-  const CFG = APPS[APP];
+  const CWI_SETTINGS = globalThis.__CWI_SETTINGS__;
+  if (!CWI_SETTINGS) return;
+
+  CWI_SETTINGS.getOptions().then((initialOptions) => {
+    let cwiOptions = CWI_SETTINGS.normalizeOptions(initialOptions);
+    let started = false;
+    let observer = null;
+
+    function currentEnabled() {
+      return CWI_SETTINGS.appEnabled(APP, cwiOptions);
+    }
+
+    const CFG = APPS[APP];
   const OVERLAY_ID = `classic-workspace-${APP}-header-icon-overlay`;
   const USE_EXTENDED_DETECTION = ["docs", "sheets", "slides", "forms"].includes(APP);
 
@@ -166,6 +178,17 @@
   let lastDay = null;
   let midnightTimer = null;
   let missingTargetCount = 0;
+
+  function cleanupDisabledState() {
+    document.getElementById(OVERLAY_ID)?.remove();
+    document.getElementById("classic-workspace-header-icon-style-v30")?.remove();
+    document.documentElement?.removeAttribute("data-cwi-header-css-detection");
+    clearHeaderMarks();
+    if (midnightTimer) {
+      clearTimeout(midnightTimer);
+      midnightTimer = null;
+    }
+  }
 
   function injectStyle() {
     if (USE_EXTENDED_DETECTION && document.documentElement) {
@@ -596,6 +619,14 @@
   function apply() {
     if (!document.body) return;
 
+    // Pending timers from a previous enabled state can still fire after the
+    // popup toggle has been switched off. Guard apply() itself so the header
+    // icon cannot be re-painted until the app is enabled again.
+    if (!currentEnabled()) {
+      cleanupDisabledState();
+      return;
+    }
+
     if (cwiShouldPauseOnThisPage()) {
       cleanupPausedPage();
       return;
@@ -662,6 +693,10 @@
   }
 
   function schedule(delay = 80) {
+    if (!currentEnabled() || cwiShouldPauseOnThisPage()) {
+      cleanupDisabledState();
+      return;
+    }
     if (scheduled) return;
     scheduled = true;
 
@@ -692,11 +727,28 @@
     }, Math.max(1000, next.getTime() - now.getTime()));
   }
 
+  function stop() {
+    started = false;
+    if (observer) {
+      observer.disconnect();
+      observer = null;
+    }
+    cleanupDisabledState();
+  }
+
   function start() {
+    if (!currentEnabled() || cwiShouldPauseOnThisPage()) {
+      stop();
+      return;
+    }
+
     apply();
     scheduleMidnightRefresh();
 
-    const observer = new MutationObserver((mutations) => {
+    if (started) return;
+    started = true;
+
+    observer = new MutationObserver((mutations) => {
       const onlyOurOverlay = mutations.every((mutation) => {
         const target = mutation.target;
         return target?.id === OVERLAY_ID || target?.id === "classic-workspace-header-icon-style-v30";
@@ -740,5 +792,18 @@
       checkDay();
       schedule(100);
     }
+  });
+
+  chrome.storage?.onChanged?.addListener((changes, areaName) => {
+    if (areaName !== "sync" || !changes.cwiOptions) return;
+    cwiOptions = CWI_SETTINGS.normalizeOptions(changes.cwiOptions.newValue);
+
+    if (currentEnabled()) {
+      start();
+      schedule(20);
+    } else {
+      stop();
+    }
+  });
   });
 })();

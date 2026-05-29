@@ -52,6 +52,10 @@
   let observer = null;
   let lastCalendarDay = null;
   let midnightTimer = null;
+  const CWI_SETTINGS = globalThis.__CWI_SETTINGS__;
+  let cwiOptions = null;
+  let originalIconLinks = null;
+  if (!CWI_SETTINGS) return;
 
   function pad2(value) {
     return String(value).padStart(2, "0");
@@ -69,13 +73,24 @@
     if (cwiShouldPauseOnThisPage()) return null;
     const host = location.hostname;
     const url = location.href;
+    let matchedApp = null;
 
     for (const [app, cfg] of Object.entries(APPS)) {
-      if (cfg.hosts?.includes(host)) return app;
-      if (cfg.urlIncludes?.some((part) => url.includes(part))) return app;
+      if (cfg.hosts?.includes(host)) {
+        matchedApp = app;
+        break;
+      }
+
+      if (cfg.urlIncludes?.some((part) => url.includes(part))) {
+        matchedApp = app;
+        break;
+      }
     }
 
-    return null;
+    if (!matchedApp) return null;
+    if (cwiOptions && !CWI_SETTINGS.appEnabled(matchedApp, cwiOptions)) return null;
+
+    return matchedApp;
   }
 
   function iconPath(app) {
@@ -102,6 +117,47 @@
     return /\bicon\b/i.test(String(rel || "")) || /apple-touch-icon|mask-icon/i.test(String(rel || ""));
   }
 
+  function captureOriginalIcons() {
+    if (originalIconLinks !== null || !document.head) return;
+
+    originalIconLinks = Array.from(document.querySelectorAll("link"))
+      .filter((el) => relIsIcon(el.rel) && el.dataset.classicWorkspaceIcon !== "1")
+      .map((el) => ({
+        rel: el.getAttribute("rel") || "icon",
+        href: el.getAttribute("href") || "",
+        type: el.getAttribute("type") || "",
+        sizes: el.getAttribute("sizes") || "",
+        color: el.getAttribute("color") || ""
+      }))
+      .filter((item) => item.href);
+  }
+
+  function cleanupFaviconState() {
+    if (observer) {
+      observer.disconnect();
+      observer = null;
+    }
+
+    if (midnightTimer) {
+      clearTimeout(midnightTimer);
+      midnightTimer = null;
+    }
+
+    document.querySelectorAll('link[data-classic-workspace-icon="1"]').forEach((el) => el.remove());
+
+    if (document.head && originalIconLinks?.length && !Array.from(document.querySelectorAll("link")).some((el) => relIsIcon(el.rel))) {
+      for (const item of originalIconLinks) {
+        const link = document.createElement("link");
+        link.rel = item.rel;
+        link.href = item.href;
+        if (item.type) link.type = item.type;
+        if (item.sizes) link.setAttribute("sizes", item.sizes);
+        if (item.color) link.setAttribute("color", item.color);
+        document.head.appendChild(link);
+      }
+    }
+  }
+
   function makeIconLink(rel, href, app) {
     const link = document.createElement("link");
     link.dataset.classicWorkspaceIcon = "1";
@@ -114,7 +170,12 @@
 
   function setFavicon() {
     const app = appForCurrentPage();
-    if (!app || !document.head) return;
+    if (!app || !document.head) {
+      if (cwiOptions && cwiOptions.enabled === false) cleanupFaviconState();
+      return;
+    }
+
+    captureOriginalIcons();
 
     const cfg = APPS[app];
     const href = iconUrl(app);
@@ -255,48 +316,73 @@
     }
   }
 
-  ensureHead(() => {
-    setFavicon();
-    startObserver();
-    pulseCalendarLock();
-    scheduleCalendarMidnightRefresh();
-  });
+  function activateFavicon() {
+    if (!appForCurrentPage()) {
+      cleanupFaviconState();
+      return;
+    }
 
-  window.addEventListener("DOMContentLoaded", () => {
-    scheduleSetFavicon(30);
-    pulseCalendarLock();
-  }, { once: true });
+    ensureHead(() => {
+      setFavicon();
+      startObserver();
+      pulseCalendarLock();
+      scheduleCalendarMidnightRefresh();
+    });
+  }
 
-  window.addEventListener("load", () => {
-    scheduleSetFavicon(120);
-    pulseCalendarLock();
-  }, { once: true });
+  CWI_SETTINGS.getOptions().then((options) => {
+    cwiOptions = CWI_SETTINGS.normalizeOptions(options);
 
-  window.addEventListener("focus", () => {
-    checkCalendarDayChange();
-    scheduleSetFavicon(50);
-    pulseCalendarLock();
-  });
+    activateFavicon();
 
-  document.addEventListener("visibilitychange", () => {
-    if (!document.hidden) {
+    window.addEventListener("DOMContentLoaded", () => {
+      scheduleSetFavicon(30);
+      pulseCalendarLock();
+    }, { once: true });
+
+    window.addEventListener("load", () => {
+      scheduleSetFavicon(120);
+      pulseCalendarLock();
+    }, { once: true });
+
+    window.addEventListener("focus", () => {
       checkCalendarDayChange();
       scheduleSetFavicon(50);
       pulseCalendarLock();
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) {
+        checkCalendarDayChange();
+        scheduleSetFavicon(50);
+        pulseCalendarLock();
+      }
+    });
+
+    chrome.storage?.onChanged?.addListener((changes, areaName) => {
+      if (areaName !== "sync" || !changes.cwiOptions) return;
+      cwiOptions = CWI_SETTINGS.normalizeOptions(changes.cwiOptions.newValue);
+
+      if (appForCurrentPage()) {
+        activateFavicon();
+        scheduleSetFavicon(20);
+      } else {
+        cleanupFaviconState();
+      }
+    });
+
+    if (location.hostname === "calendar.google.com") {
+      document.addEventListener("click", () => pulseCalendarLock(), true);
+      window.addEventListener("popstate", () => pulseCalendarLock());
+      window.addEventListener("hashchange", () => pulseCalendarLock());
+      setInterval(checkCalendarDayChange, 60 * 1000);
+    }
+
+    if (location.hostname === "maps.google.com" || location.href.includes("www.google.com/maps")) {
+      document.addEventListener("click", () => pulseHardLock(), true);
+      window.addEventListener("popstate", () => pulseHardLock());
+      window.addEventListener("hashchange", () => pulseHardLock());
+      setInterval(() => pulseHardLock(), 5000);
     }
   });
-
-  if (location.hostname === "calendar.google.com") {
-    document.addEventListener("click", () => pulseCalendarLock(), true);
-    window.addEventListener("popstate", () => pulseCalendarLock());
-    window.addEventListener("hashchange", () => pulseCalendarLock());
-    setInterval(checkCalendarDayChange, 60 * 1000);
-  }
-
-  if (location.hostname === "maps.google.com" || location.href.includes("www.google.com/maps")) {
-    document.addEventListener("click", () => pulseHardLock(), true);
-    window.addEventListener("popstate", () => pulseHardLock());
-    window.addEventListener("hashchange", () => pulseHardLock());
-    setInterval(() => pulseHardLock(), 5000);
-  }
 })();
