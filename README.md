@@ -12,7 +12,7 @@ Restore the classic Google Workspace icons in the browser tab, app header, Googl
 - Fixed a Google Calendar issue where importing ICS or CSV files from Calendar settings could fail while the extension was enabled.
 - Improved behavior on Google Calendar settings pages by preventing the app launcher visual replacement script from running there.
 
-## What's new in 1.0.3
+## 1.0.3
 
 - Added a user-friendly extension panel to manage icon replacements from the toolbar.
 - Added a global enable or pause control for the extension.
