@@ -20,6 +20,10 @@ Restore the classic Google Workspace icons in the browser tab, app header, Googl
 - Added quick access to support development, report issues and view the privacy policy.
 - Improved live toggle behavior so supported icon changes apply without refreshing open Google pages.
 
+## Support development
+Old Google Icons for Workspace is free to use and designed to stay privacy-friendly. If you find it useful, any optional support is greatly appreciated and helps keep the extension maintained and improved.
+https://buymeacoffee.com/openextensions
+
 ## Privacy
 
 The extension only changes visual icons locally in the browser. It does not collect, sell, share, store or transmit personal data.
