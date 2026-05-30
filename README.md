@@ -20,6 +20,10 @@ Restore the classic Google Workspace icons in the browser tab, app header, Googl
 - Added quick access to support development, report issues and view the privacy policy.
 - Improved live toggle behavior so supported icon changes apply without refreshing open Google pages.
 
+## What's new in 1.0.4
+
+- Fixed top-left app icon positioning and hover behavior in Google Docs, Sheets and Slides.
+
 ## Support development
 Old Google Icons for Workspace is free to use and designed to stay privacy-friendly. If you find it useful, any optional support is greatly appreciated and helps keep the extension maintained and improved.
 https://buymeacoffee.com/openextensions

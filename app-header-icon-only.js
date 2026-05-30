@@ -221,6 +221,33 @@
         mask-image: none !important;
         content: none !important;
       }
+      html[data-cwi-header-css-detection="1"] #docs-branding-logo[data-cwi-header-original-icon="1"],
+      html[data-cwi-header-css-detection="1"] #docs-branding-logo[data-cwi-header-original-icon="1"] *,
+      html[data-cwi-header-css-detection="1"] #docs-drive-logo,
+      html[data-cwi-header-css-detection="1"] #docs-drive-logo * {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        transition: none !important;
+        animation: none !important;
+      }
+      html[data-cwi-header-css-detection="1"] #docs-branding-logo[data-cwi-header-original-icon="1"]::before,
+      html[data-cwi-header-css-detection="1"] #docs-branding-logo[data-cwi-header-original-icon="1"]::after,
+      html[data-cwi-header-css-detection="1"] #docs-branding-logo[data-cwi-header-original-icon="1"] *::before,
+      html[data-cwi-header-css-detection="1"] #docs-branding-logo[data-cwi-header-original-icon="1"] *::after,
+      html[data-cwi-header-css-detection="1"] #docs-drive-logo::before,
+      html[data-cwi-header-css-detection="1"] #docs-drive-logo::after,
+      html[data-cwi-header-css-detection="1"] #docs-drive-logo *::before,
+      html[data-cwi-header-css-detection="1"] #docs-drive-logo *::after {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        background-image: none !important;
+        -webkit-mask-image: none !important;
+        mask-image: none !important;
+        content: none !important;
+        transition: none !important;
+        animation: none !important;
+      }
+
       .cwi-gmail-lockup-v32 {
         display: inline-flex !important;
         align-items: center !important;
@@ -473,7 +500,22 @@
     return Array.from(found);
   }
 
+  function docsSuiteBrandingTarget() {
+    if (!["docs", "sheets", "slides"].includes(APP)) return null;
+
+    const logo = document.getElementById("docs-branding-logo");
+    if (!logo) return null;
+
+    const rect = logo.getBoundingClientRect();
+    if (!rectLooksLikeHeaderLogo(rect)) return null;
+
+    return logo;
+  }
+
   function findHeaderLogoElement() {
+    const lockedDocsTarget = docsSuiteBrandingTarget();
+    if (lockedDocsTarget) return lockedDocsTarget;
+
     let candidates = [];
 
     for (const selector of selectorsForApp()) {
@@ -566,6 +608,9 @@
     overlay.style.backgroundRepeat = "no-repeat";
     overlay.style.backgroundPosition = "center";
     overlay.style.backgroundSize = "contain";
+    overlay.style.boxSizing = "border-box";
+    overlay.style.contain = "layout paint style";
+    overlay.style.willChange = "left, top, width, height, background-image";
     overlay.style.display = "none";
 
     document.documentElement.appendChild(overlay);
@@ -678,13 +723,21 @@
       setOverlayAsGmailLockup(overlay, target, size);
       overlay.style.backgroundColor = "transparent";
     } else {
-      setOverlayAsIcon(overlay, iconUrl(APP), singleIcon ? size : coverWidth);
-      overlay.style.width = `${coverWidth}px`;
-      overlay.style.height = `${size}px`;
-      // Fix mode fosc general:
-      // si és icona independent, el fons és transparent. Si és lockup parcial,
-      // usem el fons real de la zona per tapar només la icona antiga.
-      overlay.style.backgroundColor = singleIcon ? "transparent" : nearestBackground(target);
+      const useHeaderCover = USE_EXTENDED_DETECTION && ["docs", "sheets", "slides", "forms"].includes(APP);
+      const coverPadding = useHeaderCover ? 3 : 0;
+      const backgroundColor = useHeaderCover || !singleIcon ? nearestBackground(target) : "transparent";
+
+      // Docs, Sheets and Slides can briefly repaint the new Google icon during
+      // responsive header layout changes. A tiny background cover behind the
+      // replacement icon prevents that underlying repaint from showing through.
+      setOverlayAsIcon(overlay, iconUrl(APP), size);
+      overlay.style.left = `${left - coverPadding}px`;
+      overlay.style.top = `${top - coverPadding}px`;
+      overlay.style.width = `${coverWidth + coverPadding * 2}px`;
+      overlay.style.height = `${size + coverPadding * 2}px`;
+      overlay.style.backgroundSize = `${size}px ${size}px`;
+      overlay.style.backgroundColor = backgroundColor;
+      overlay.style.borderRadius = useHeaderCover ? "6px" : "0";
     }
 
     overlay.style.display = "block";

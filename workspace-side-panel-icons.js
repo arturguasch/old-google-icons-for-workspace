@@ -33,7 +33,7 @@
 
   const STYLE_ID = "cwi-workspace-side-panel-icons-style";
   const VERSION_ATTR = "data-cwi-sidepanel-css-version";
-  const VERSION = "1.0.3-css-url-selectors-options";
+  const VERSION = "1.0.4-css-url-selectors-options";
   const ICON_SIZE = "24px";
   let cwiOptions = null;
 
