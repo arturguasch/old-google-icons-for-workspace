@@ -2,6 +2,14 @@
 
 Restore the classic Google Workspace icons in the browser tab, app header, Google app launcher and supported side panels.
 
+My goal with browser extensions is to keep them simple, accessible and free for everyone. I also care a lot about privacy: I do not want to build tools that secretly sell or misuse people's data, as many extensions unfortunately do.
+
+If you find my work useful, any support is greatly appreciated and helps me keep maintaining and improving these projects.
+https://buymeacoffee.com/openextensions
+
+You can install and keep the extension easily configured from the Chrome Web Store:
+https://chromewebstore.google.com/detail/old-google-icons-for-work/fmjfppfhcmngnmmlpellgekebpcmiagj?authuser=1&hl=en
+
 ## 1.0.1
 
 - Added support for replacing Calendar, Keep and Maps icons in the Google Workspace side panel.
@@ -23,11 +31,4 @@ Restore the classic Google Workspace icons in the browser tab, app header, Googl
 ## What's new in 1.0.4
 
 - Fixed top-left app icon positioning and hover behavior in Google Docs, Sheets and Slides.
-
-## Support development
-Old Google Icons for Workspace is free to use and designed to stay privacy-friendly. If you find it useful, any optional support is greatly appreciated and helps keep the extension maintained and improved.
-https://buymeacoffee.com/openextensions
-
-## Privacy
-
-The extension only changes visual icons locally in the browser. It does not collect, sell, share, store or transmit personal data.
+- Fixed the hover background for replaced icons in the Google app launcher.
