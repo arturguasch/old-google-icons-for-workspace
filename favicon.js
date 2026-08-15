@@ -35,7 +35,7 @@
     sheets: { icon: "icons/sheets-classic.svg", urlIncludes: ["docs.google.com/spreadsheets"], type: "image/svg+xml" },
     slides: { icon: "icons/slides-classic.svg", urlIncludes: ["docs.google.com/presentation"], type: "image/svg+xml" },
     forms: { icon: "icons/forms-classic.png", urlIncludes: ["docs.google.com/forms"], type: "image/png" },
-    meet: { icon: "icons/meet-classic.svg", hosts: ["meet.google.com"], type: "image/svg+xml" },
+    meet: { icon: "icons/meet-classic.svg", hosts: ["meet.google.com"], type: "image/svg+xml", hardLock: true },
     chat: { icon: "icons/chat-classic.svg", hosts: ["chat.google.com"], type: "image/svg+xml" },
     keep: { icon: "icons/keep-classic.svg", hosts: ["keep.google.com"], type: "image/svg+xml" },
     maps: {
@@ -55,6 +55,10 @@
   const CWI_SETTINGS = globalThis.__CWI_SETTINGS__;
   let cwiOptions = null;
   let originalIconLinks = null;
+  // Chrome can keep a favicon cached by page URL even after the <link> changes.
+  // A stable per-page token forces the browser to fetch the classic icon once,
+  // without causing the MutationObserver to loop.
+  const FAVICON_CACHE_KEY = `${chrome.runtime.getManifest().version}-${Date.now()}-${Math.random().toString(36).slice(2)}`;
   if (!CWI_SETTINGS) return;
 
   function pad2(value) {
@@ -104,7 +108,8 @@
   }
 
   function iconUrl(app) {
-    return chrome.runtime.getURL(iconPath(app));
+    const base = chrome.runtime.getURL(iconPath(app));
+    return `${base}?cwi=${encodeURIComponent(FAVICON_CACHE_KEY)}`;
   }
 
   function ensureHead(callback) {

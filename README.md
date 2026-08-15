@@ -32,3 +32,9 @@ https://chromewebstore.google.com/detail/old-google-icons-for-work/fmjfppfhcmngn
 
 - Fixed top-left app icon positioning and hover behavior in Google Docs, Sheets and Slides.
 - Fixed the hover background for replaced icons in the Google app launcher.
+
+## What's new in 1.0.5
+
+- Fixed the Google Meet favicon so the classic icon is correctly restored in the browser tab.
+- Added a stronger Meet favicon lock to prevent Google Meet from replacing the classic icon.
+- Added cache-busting for the Meet favicon to prevent Chrome from continuing to display a previously cached icon.
