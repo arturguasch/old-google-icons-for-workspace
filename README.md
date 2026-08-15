@@ -28,7 +28,7 @@ https://chromewebstore.google.com/detail/old-google-icons-for-work/fmjfppfhcmngn
 - Added quick access to support development, report issues and view the privacy policy.
 - Improved live toggle behavior so supported icon changes apply without refreshing open Google pages.
 
-## What's new in 1.0.4
+## 1.0.4
 
 - Fixed top-left app icon positioning and hover behavior in Google Docs, Sheets and Slides.
 - Fixed the hover background for replaced icons in the Google app launcher.
