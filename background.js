@@ -1,7 +1,10 @@
-// Dynamic redirect rules for legacy Maps icon only.
+// Dynamic redirect rules for the legacy Maps icon and the classic account ring.
 // Calendar redirects are intentionally disabled to avoid interfering with Calendar import/export screens.
 
-const ALL_LEGACY_DYNAMIC_RULE_IDS = [7001, 7002, 7003, 7004, 7005, 7101, 7102, 7103, 7104];
+const ALL_LEGACY_DYNAMIC_RULE_IDS = [7001, 7002, 7003, 7004, 7005, 7101, 7102, 7103, 7104, 7201, 7202];
+
+// Verification palette. Set to false to serve the real classic ring colours.
+const RING_TEST_MODE = false;
 
 const DEFAULT_OPTIONS = {
   enabled: true,
@@ -16,7 +19,8 @@ const DEFAULT_OPTIONS = {
     meet: true,
     chat: true,
     keep: true,
-    maps: true
+    maps: true,
+    ring: true
   }
 };
 
@@ -101,9 +105,39 @@ function mapsRules() {
   ];
 }
 
+// The redesigned account ring is a bitmap served from gstatic, so it is swapped
+// at the network layer. Nothing has to watch the DOM: the classic ring is what
+// the page receives in the first place, on every surface and before first paint.
+const RING_URL_FILTERS = [
+  "||ssl.gstatic.com/gb/images/ring/",
+  "||www.gstatic.com/gb/images/ring/"
+];
+
+function ringRules() {
+  const extensionPath = RING_TEST_MODE
+    ? "/icons/account-ring-test.svg"
+    : "/icons/account-ring-classic.svg";
+
+  return RING_URL_FILTERS.map((urlFilter, index) => ({
+    id: 7201 + index,
+    priority: 25,
+    action: {
+      type: "redirect",
+      redirect: { extensionPath }
+    },
+    condition: {
+      urlFilter,
+      resourceTypes: ["image"]
+    }
+  }));
+}
+
 async function updateDynamicRules() {
   const options = await getOptions();
-  const addRules = options.enabled && options.apps.maps ? mapsRules() : [];
+  const addRules = [];
+
+  if (options.enabled && options.apps.maps) addRules.push(...mapsRules());
+  if (options.enabled && options.apps.ring) addRules.push(...ringRules());
 
   await chrome.declarativeNetRequest.updateDynamicRules({
     removeRuleIds: ALL_LEGACY_DYNAMIC_RULE_IDS,
@@ -120,10 +154,52 @@ async function refreshDynamicRules() {
   }
 }
 
+async function notifyTabsRingRefresh() {
+  try {
+    const tabs = await chrome.tabs.query({
+      url: [
+        "https://*.google.com/*",
+        "https://*.google.cat/*",
+        "https://one.google.com/*",
+        "https://mail.google.com/*",
+        "https://drive.google.com/*",
+        "https://docs.google.com/*",
+        "https://calendar.google.com/*",
+        "https://keep.google.com/*",
+        "https://meet.google.com/*",
+        "https://chat.google.com/*",
+        "https://maps.google.com/*",
+        "https://ogs.google.com/*"
+      ]
+    });
+
+    for (const tab of tabs) {
+      if (!tab.id) continue;
+      chrome.tabs.sendMessage(tab.id, { type: "cwi-ring-live-refresh" }, () => {
+        void chrome.runtime.lastError;
+      });
+    }
+  } catch (_) {
+    // Tabs without the content script are expected.
+  }
+}
+
+chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+  if (message?.type !== "cwi-sync-ring-rules") return;
+
+  refreshDynamicRules()
+    .then(() => sendResponse({ ok: true }))
+    .catch(() => sendResponse({ ok: false }));
+
+  return true;
+});
+
 chrome.runtime.onInstalled.addListener(refreshDynamicRules);
 chrome.runtime.onStartup.addListener(refreshDynamicRules);
 chrome.storage.onChanged.addListener((changes, areaName) => {
-  if (areaName === "sync" && changes.cwiOptions) refreshDynamicRules();
+  if (areaName !== "sync" || !changes.cwiOptions) return;
+
+  refreshDynamicRules().then(() => notifyTabsRingRefresh());
 });
 
 chrome.alarms.onAlarm.addListener((alarm) => {

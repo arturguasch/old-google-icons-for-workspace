@@ -12,7 +12,8 @@
     "meet",
     "chat",
     "keep",
-    "maps"
+    "maps",
+    "ring"
   ];
 
   const DEFAULT_OPTIONS = {

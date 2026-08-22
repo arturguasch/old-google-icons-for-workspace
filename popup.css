@@ -115,12 +115,6 @@ h2 {
   background: #fff;
 }
 
-.app-row[data-app="maps"] {
-  grid-column: 1 / -1;
-  justify-self: center;
-  width: calc(50% - 4px);
-}
-
 .app-name {
   display: flex;
   align-items: center;

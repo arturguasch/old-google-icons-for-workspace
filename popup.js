@@ -13,7 +13,8 @@
     { key: "meet", label: "Meet", icon: "icons/meet-classic.svg" },
     { key: "chat", label: "Chat", icon: "icons/chat-classic.svg" },
     { key: "keep", label: "Keep", icon: "icons/keep-classic.svg" },
-    { key: "maps", label: "Maps", icon: "icons/maps-classic.png" }
+    { key: "maps", label: "Maps", icon: "icons/maps-classic.png" },
+    { key: "ring", label: "Ring", icon: "icons/account-ring-classic.svg" }
   ];
 
   const settings = globalThis.__CWI_SETTINGS__;
