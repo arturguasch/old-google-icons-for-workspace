@@ -39,7 +39,7 @@ https://chromewebstore.google.com/detail/old-google-icons-for-work/fmjfppfhcmngn
 - Added a stronger Meet favicon lock to prevent Google Meet from replacing the classic icon.
 - Added cache-busting for the Meet favicon to prevent Chrome from continuing to display a previously cached icon.
 
-## 1.0.6
+## What's new in 1.0.6
 
 - Added a Ring entry to the extension panel with its own on/off switch.
 - Restored the classic multicolour Google account ring (red, yellow, green, blue)
