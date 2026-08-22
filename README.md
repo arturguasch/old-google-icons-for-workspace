@@ -28,28 +28,20 @@ https://chromewebstore.google.com/detail/old-google-icons-for-work/fmjfppfhcmngn
 - Added quick access to support development, report issues and view the privacy policy.
 - Improved live toggle behavior so supported icon changes apply without refreshing open Google pages.
 
-## What's new in 1.0.4
+## 1.0.4
 
 - Fixed top-left app icon positioning and hover behavior in Google Docs, Sheets and Slides.
 - Fixed the hover background for replaced icons in the Google app launcher.
 
-## What's new in 1.0.5
+## 1.0.5
 
 - Fixed the Google Meet favicon so the classic icon is correctly restored in the browser tab.
 - Added a stronger Meet favicon lock to prevent Google Meet from replacing the classic icon.
 - Added cache-busting for the Meet favicon to prevent Chrome from continuing to display a previously cached icon.
 
-## What's new in 1.0.6
+## 1.0.6
 
 - Added a Ring entry to the extension panel with its own on/off switch.
 - Restored the classic multicolour Google account ring (red, yellow, green, blue)
   in place of the redesigned blue AI-style ring.
-- The new ring is swapped at the network layer. Google serves it as a bitmap from
-  `gstatic.com/gb/images/ring/`, so a declarativeNetRequest rule redirects those
-  requests to the packaged classic ring. The page never downloads the new ring,
-  on any Google surface, in any frame, before first paint.
-- `account-ring.js` stays as a fallback for variants drawn as inline SVG rather
-  than requested as an image (including the large ring shown after clicking the
-  avatar).
-- Turning the Ring switch on or off updates open Google tabs immediately, without
-  a page refresh.
+
