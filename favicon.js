@@ -28,6 +28,12 @@
 
   if (cwiShouldPauseOnThisPage()) return;
   const APPS = {
+    vids: {"icon": "icons/vids-classic.png", "hosts": ["vids.google.com"], "type": "image/png", "urlIncludes": ["docs.google.com/videos"]},
+    tasks: {"icon": "icons/tasks-classic.png", "hosts": ["tasks.google.com"], "type": "image/png"},
+    voice: {"icon": "icons/voice-classic.svg", "hosts": ["voice.google.com"], "type": "image/svg+xml"},
+    sites: {"icon": "icons/sites-classic.svg", "hosts": ["sites.google.com"], "type": "image/svg+xml"},
+    photos: {"icon": "icons/photos-classic.png", "hosts": ["photos.google.com"], "type": "image/png"},
+    wallet: {"icon": "icons/wallet-classic.svg", "hosts": ["wallet.google.com"], "type": "image/svg+xml"},
     gmail: { icon: "icons/gmail-classic.svg", hosts: ["mail.google.com"], type: "image/svg+xml" },
     calendar: { hosts: ["calendar.google.com"], hardLock: true },
     drive: { icon: "icons/drive-classic.svg", hosts: ["drive.google.com"], type: "image/svg+xml" },

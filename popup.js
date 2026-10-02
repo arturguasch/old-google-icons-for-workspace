@@ -14,6 +14,12 @@
     { key: "chat", label: "Chat", icon: "icons/chat-classic.svg" },
     { key: "keep", label: "Keep", icon: "icons/keep-classic.svg" },
     { key: "maps", label: "Maps", icon: "icons/maps-classic.png" },
+    { key: "vids", label: "Vids", icon: "icons/vids-classic.png" },
+    { key: "tasks", label: "Tasks", icon: "icons/tasks-classic.png" },
+    { key: "voice", label: "Voice", icon: "icons/voice-classic.svg" },
+    { key: "sites", label: "Sites", icon: "icons/sites-classic.svg" },
+    { key: "photos", label: "Photos", icon: "icons/photos-classic.png" },
+    { key: "wallet", label: "Wallet", icon: "icons/wallet-classic.svg" },
     { key: "ring", label: "Ring", icon: "icons/account-ring-classic.svg" }
   ];
 

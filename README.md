@@ -2,6 +2,8 @@
 
 Restore the classic Google Workspace icons in the browser tab, app header, Google app launcher and supported side panels.
 
+Supported apps: Gmail, Calendar, Drive, Docs, Sheets, Slides, Forms, Meet, Chat, Keep, Maps, Vids, Tasks, Voice and Sites, plus Google Photos and Google Wallet. Each app has its own on/off switch. Header replacements apply where a supported product logo is detected; the side panel supports Calendar, Keep, Maps and Tasks.
+
 My goal with browser extensions is to keep them simple, accessible and free for everyone. I also care a lot about privacy: I do not want to build tools that secretly sell or misuse people's data, as many extensions unfortunately do.
 
 If you find my work useful, any support is greatly appreciated and helps me keep maintaining and improving these projects.
@@ -39,9 +41,14 @@ https://chromewebstore.google.com/detail/old-google-icons-for-work/fmjfppfhcmngn
 - Added a stronger Meet favicon lock to prevent Google Meet from replacing the classic icon.
 - Added cache-busting for the Meet favicon to prevent Chrome from continuing to display a previously cached icon.
 
-## What's new in 1.0.6
+## 1.0.6
 
 - Added a Ring entry to the extension panel with its own on/off switch.
 - Restored the classic multicolour Google account ring (red, yellow, green, blue)
   in place of the redesigned blue AI-style ring.
 
+## What's new in 1.0.7
+
+- Added support for Google Vids, Tasks, Voice, Sites, Photos and Wallet, with classic icons and individual on/off switches. Google Tasks is also supported in the Workspace side panel.
+- Fixed the Drive header icon appearing over file previews. The classic icon now stays below preview and dialog layers.
+- Fixed the Gmail logo text appearing blue. It now uses a neutral colour matched to the header background in light and dark themes.

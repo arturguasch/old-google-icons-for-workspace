@@ -1,0 +1,8 @@
+Classic icons downloaded 2026-10-02. Integrated into extension version 1.0.7.
+vids-classic.png: https://www.gstatic.com/images/branding/product/2x/vids_48dp.png
+tasks-classic.png: https://www.gstatic.com/images/branding/product/2x/tasks_48dp.png
+photos-classic.png: https://www.gstatic.com/images/branding/product/2x/photos_48dp.png
+voice-classic.svg: https://commons.wikimedia.org/wiki/File:Google_Voice_icon_(2020).svg
+sites-classic.svg: https://commons.wikimedia.org/wiki/File:Google_Sites_2020_Logo.svg
+wallet-classic.svg: https://upload.wikimedia.org/wikipedia/commons/archive/f/fa/20260630134400%21Google_Wallet_icon.svg (flat revision preceding gradient update)
+Voice, Sites and Wallet use the flat SVG versions listed above instead of the older PNGs returned by Google's generic product paths.

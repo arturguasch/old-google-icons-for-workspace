@@ -13,6 +13,12 @@
     "chat",
     "keep",
     "maps",
+    "vids",
+    "tasks",
+    "voice",
+    "sites",
+    "photos",
+    "wallet",
     "ring"
   ];
 

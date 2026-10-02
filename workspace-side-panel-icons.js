@@ -67,6 +67,13 @@ ${selectors.join(",\n")} {
 
   function css() {
     const chunks = [
+      replacementRule("tasks", runtimeUrl("icons/tasks-classic.png"), [
+        '.app-switcher-button-icon-container[style*="tasks_"]',
+        '[style*="/companion/icon_assets/tasks_"]',
+        '[style*="tasks_2026_2x"]',
+        '.Yb-Il-d-c-j[style*="tasks_"]',
+        '.aT5-aOt-I-JX-Jw[style*="tasks_"]'
+      ]),
       replacementRule("calendar", runtimeUrl(calendarIconPath()), [
         '.app-switcher-button[data-guest-app-id="6"] .app-switcher-button-icon-container',
         '[data-guest-app-id="6"] .app-switcher-button-icon-container',

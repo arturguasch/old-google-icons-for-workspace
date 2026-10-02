@@ -20,6 +20,12 @@ const DEFAULT_OPTIONS = {
     chat: true,
     keep: true,
     maps: true,
+    vids: true,
+    tasks: true,
+    voice: true,
+    sites: true,
+    photos: true,
+    wallet: true,
     ring: true
   }
 };

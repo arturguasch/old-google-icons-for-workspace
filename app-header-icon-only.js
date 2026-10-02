@@ -31,6 +31,12 @@
   // v3.2: detecció ampliada només per Docs, Sheets i Slides. Evita parpelleig a la resta d'apps.
 
   const APPS = {
+    vids: {"icon": "icons/vids-classic.png", "hosts": ["vids.google.com"], "urlIncludes": ["docs.google.com/videos"], "keywords": ["vids", "logo_vids"], "maxLeft": 260, "maxTop": 110, "minScore": 30, "sizeMin": 24, "sizeMax": 38, "requireKeyword": true},
+    tasks: {"icon": "icons/tasks-classic.png", "hosts": ["tasks.google.com"], "keywords": ["tasks", "logo_tasks"], "maxLeft": 260, "maxTop": 110, "minScore": 30, "sizeMin": 24, "sizeMax": 38, "requireKeyword": true},
+    voice: {"icon": "icons/voice-classic.svg", "hosts": ["voice.google.com"], "keywords": ["voice", "logo_voice"], "maxLeft": 260, "maxTop": 110, "minScore": 30, "sizeMin": 24, "sizeMax": 38, "requireKeyword": true},
+    sites: {"icon": "icons/sites-classic.svg", "hosts": ["sites.google.com"], "keywords": ["sites", "logo_sites"], "maxLeft": 260, "maxTop": 110, "minScore": 30, "sizeMin": 24, "sizeMax": 38, "requireKeyword": true},
+    photos: {"icon": "icons/photos-classic.png", "hosts": ["photos.google.com"], "keywords": ["photos", "logo_photos"], "maxLeft": 260, "maxTop": 110, "minScore": 30, "sizeMin": 24, "sizeMax": 38, "requireKeyword": true},
+    wallet: {"icon": "icons/wallet-classic.svg", "hosts": ["wallet.google.com"], "keywords": ["wallet", "logo_wallet"], "maxLeft": 260, "maxTop": 110, "minScore": 30, "sizeMin": 24, "sizeMax": 38, "requireKeyword": true},
     gmail: {
       icon: "icons/gmail-classic.svg",
       hosts: ["mail.google.com"],
@@ -172,7 +178,7 @@
 
     const CFG = APPS[APP];
   const OVERLAY_ID = `classic-workspace-${APP}-header-icon-overlay`;
-  const USE_EXTENDED_DETECTION = ["docs", "sheets", "slides", "forms"].includes(APP);
+  const USE_EXTENDED_DETECTION = ["docs", "sheets", "slides", "forms", "vids"].includes(APP);
 
   let scheduled = false;
   let lastDay = null;
@@ -200,6 +206,19 @@
     const style = document.createElement("style");
     style.id = "classic-workspace-header-icon-style-v30";
     style.textContent = `
+      #docs-branding-logo[data-cwi-vids-header-icon="1"] {
+        background-image: url("${iconUrl("vids")}") !important;
+        background-repeat: no-repeat !important;
+        background-position: center !important;
+        background-size: contain !important;
+      }
+      #docs-branding-logo[data-cwi-vids-header-icon="1"] *,
+      #docs-branding-logo[data-cwi-vids-header-icon="1"]::before,
+      #docs-branding-logo[data-cwi-vids-header-icon="1"]::after {
+        opacity: 0 !important;
+        visibility: hidden !important;
+      }
+
       [data-cwi-header-original-icon="1"],
       [data-cwi-header-original-lockup="1"] {
         opacity: 0 !important;
@@ -332,20 +351,15 @@
   }
 
   function gmailTextColor(target) {
-    let node = target;
-    for (let i = 0; node && i < 8; i += 1, node = node.parentElement) {
-      const color = getComputedStyle(node).color;
-      const rgb = parseRgb(color);
-      if (rgb) {
-        const lum = luminance(rgb);
-        if (lum > 0.15 || isDarkPage()) return color;
-      }
-    }
-    return isDarkPage() ? "#e8eaed" : "#5f6368";
+    // The logo is often inside a link. Its inherited blue colour is not the
+    // Gmail wordmark colour; choose a neutral tone for the local header theme.
+    const darkHeader = luminance(parseRgb(nearestBackground(target))) < 0.35;
+    return darkHeader ? "#e8eaed" : "#5f6368";
   }
 
   function clearHeaderMarks() {
-    document.querySelectorAll("[data-cwi-header-original-icon='1'], [data-cwi-header-original-lockup='1']").forEach((el) => {
+    document.querySelectorAll("[data-cwi-header-original-icon='1'], [data-cwi-header-original-lockup='1'], [data-cwi-vids-header-icon='1']").forEach((el) => {
+      el.removeAttribute("data-cwi-vids-header-icon");
       el.removeAttribute("data-cwi-header-original-icon");
       el.removeAttribute("data-cwi-header-original-lockup");
     });
@@ -415,6 +429,7 @@
     if (!rectLooksLikeHeaderLogo(rect)) return -1;
 
     const text = nodeText(el);
+    if (CFG.requireKeyword && !CFG.keywords.some((keyword) => text.includes(normalized(keyword)))) return -1;
     let score = 0;
 
     for (const keyword of CFG.keywords) {
@@ -440,7 +455,7 @@
     if (rect.top < 70) score += 10;
     if (rect.width <= 80) score += 8;
 
-    if (["docs", "sheets", "slides", "forms"].includes(APP) && rect.left < 80 && rect.top < 55) {
+    if (["docs", "sheets", "slides", "forms", "vids"].includes(APP) && rect.left < 80 && rect.top < 55) {
       score += 18;
     }
 
@@ -501,7 +516,7 @@
   }
 
   function docsSuiteBrandingTarget() {
-    if (!["docs", "sheets", "slides"].includes(APP)) return null;
+    if (!["docs", "sheets", "slides", "vids"].includes(APP)) return null;
 
     const logo = document.getElementById("docs-branding-logo");
     if (!logo) return null;
@@ -539,6 +554,9 @@
 
     if (best && bestScore >= CFG.minScore) return best;
 
+    // New apps must have an identified product logo; never replace arbitrary images.
+    if (CFG.requireKeyword) return null;
+
     const fallbackSelector = USE_EXTENDED_DETECTION
       ? "img, svg, image, [role='img'], [class*='docs-icon' i], [class*='product-icon' i], [class*='app-icon' i], [class*='logo' i]"
       : "img, svg, image, [role='img']";
@@ -564,7 +582,7 @@
     if (rect.width <= 58) return true;
 
     // Docs, Sheets, Slides, Forms i Calendar solen tenir la icona separada del text.
-    if (["docs", "sheets", "slides", "forms", "calendar", "drive", "meet", "chat", "keep", "maps"].includes(APP) && rect.width <= 90) {
+    if (["docs", "sheets", "slides", "forms", "vids", "calendar", "drive", "meet", "chat", "keep", "maps"].includes(APP) && rect.width <= 90) {
       return true;
     }
 
@@ -604,7 +622,8 @@
     overlay.setAttribute("aria-hidden", "true");
     overlay.style.position = "fixed";
     overlay.style.pointerEvents = "none";
-    overlay.style.zIndex = "2147483647";
+    // Keep Drive icons below file preview and dialog layers.
+    overlay.style.zIndex = APP === "drive" || CFG.requireKeyword ? "1" : "2147483647";
     overlay.style.backgroundRepeat = "no-repeat";
     overlay.style.backgroundPosition = "center";
     overlay.style.backgroundSize = "contain";
@@ -680,6 +699,18 @@
     injectStyle();
 
     const target = findHeaderLogoElement();
+    // Paint Vids in its native branding box so later editor stacking layers
+    // cannot cover a detached overlay while the original logo stays hidden.
+    if (APP === "vids" && target?.id === "docs-branding-logo") {
+      document.getElementById(OVERLAY_ID)?.remove();
+      target.removeAttribute("data-cwi-header-original-icon");
+      target.removeAttribute("data-cwi-header-original-lockup");
+      if (target.getAttribute("data-cwi-vids-header-icon") !== "1") {
+        target.setAttribute("data-cwi-vids-header-icon", "1");
+      }
+      missingTargetCount = 0;
+      return;
+    }
     const overlay = ensureOverlay();
 
     if (!target) {
@@ -723,7 +754,7 @@
       setOverlayAsGmailLockup(overlay, target, size);
       overlay.style.backgroundColor = "transparent";
     } else {
-      const useHeaderCover = USE_EXTENDED_DETECTION && ["docs", "sheets", "slides", "forms"].includes(APP);
+      const useHeaderCover = USE_EXTENDED_DETECTION && ["docs", "sheets", "slides", "forms", "vids"].includes(APP);
       const coverPadding = useHeaderCover ? 3 : 0;
       const backgroundColor = useHeaderCover || !singleIcon ? nearestBackground(target) : "transparent";
 

@@ -39,6 +39,12 @@
   document.documentElement.setAttribute("data-cwi-launcher-version", VERSION);
 
   const APPS = [
+    {"app": "vids", "icon": "icons/vids-classic.png", "selectors": ["a[href*=\"vids.google.com\"]", "a[href*=\"docs.google.com/videos\"]"]},
+    {"app": "tasks", "icon": "icons/tasks-classic.png", "selectors": ["a[href*=\"tasks.google.com\"]"]},
+    {"app": "voice", "icon": "icons/voice-classic.svg", "selectors": ["a[href*=\"voice.google.com\"]"]},
+    {"app": "sites", "icon": "icons/sites-classic.svg", "selectors": ["a[href*=\"sites.google.com\"]"]},
+    {"app": "photos", "icon": "icons/photos-classic.png", "selectors": ["a[href*=\"photos.google.com\"]"]},
+    {"app": "wallet", "icon": "icons/wallet-classic.svg", "selectors": ["a[href*=\"wallet.google.com\"]"]},
     {
       app: "drive",
       icon: "icons/drive-classic.svg",

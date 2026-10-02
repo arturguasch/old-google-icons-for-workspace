@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "__MSG_extDescription__",
   "icons": {
     "16": "extension_icons/icon-16.png",
@@ -22,7 +22,13 @@
         "https://maps.google.com/*",
         "https://meet.google.com/*",
         "https://www.google.com/maps*",
-        "https://www.google.com/maps/*"
+        "https://www.google.com/maps/*",
+        "https://vids.google.com/*",
+        "https://tasks.google.com/*",
+        "https://voice.google.com/*",
+        "https://sites.google.com/*",
+        "https://photos.google.com/*",
+        "https://wallet.google.com/*"
       ],
       "js": [
         "cwi-settings.js",
@@ -52,7 +58,13 @@
         "https://maps.google.com/*",
         "https://meet.google.com/*",
         "https://www.google.com/maps*",
-        "https://www.google.com/maps/*"
+        "https://www.google.com/maps/*",
+        "https://vids.google.com/*",
+        "https://tasks.google.com/*",
+        "https://voice.google.com/*",
+        "https://sites.google.com/*",
+        "https://photos.google.com/*",
+        "https://wallet.google.com/*"
       ],
       "js": [
         "cwi-settings.js",
@@ -81,7 +93,13 @@
         "https://maps.google.com/*",
         "https://www.google.com/*",
         "https://www.google.cat/*",
-        "https://ogs.google.com/*"
+        "https://ogs.google.com/*",
+        "https://vids.google.com/*",
+        "https://tasks.google.com/*",
+        "https://voice.google.com/*",
+        "https://sites.google.com/*",
+        "https://photos.google.com/*",
+        "https://wallet.google.com/*"
       ],
       "js": [
         "cwi-settings.js",
@@ -137,7 +155,13 @@
         "https://maps.google.com/*",
         "https://www.google.com/*",
         "https://www.google.cat/*",
-        "https://ogs.google.com/*"
+        "https://ogs.google.com/*",
+        "https://vids.google.com/*",
+        "https://tasks.google.com/*",
+        "https://voice.google.com/*",
+        "https://sites.google.com/*",
+        "https://photos.google.com/*",
+        "https://wallet.google.com/*"
       ],
       "js": [
         "cwi-settings.js",
