@@ -12,6 +12,24 @@ https://buymeacoffee.com/openextensions
 You can install and keep the extension easily configured from the Chrome Web Store:
 https://chromewebstore.google.com/detail/old-google-icons-for-work/fmjfppfhcmngnmmlpellgekebpcmiagj?authuser=1&hl=en
 
+## Firefox (this package)
+
+This build is Manifest V3 for **Mozilla Firefox** (121+).
+
+Temporary install for testing:
+
+1. Open `about:debugging#/runtime/this-firefox`
+2. Click **Load Temporary Add-on…**
+3. Select this package’s `manifest.json` (or the `.zip`)
+
+Permanent install goes through [addons.mozilla.org](https://addons.mozilla.org/) after signing.
+
+Firefox differences vs the Chrome build:
+
+- Background uses an event page (`background.scripts`) instead of a service worker
+- Uses `declarativeNetRequestWithHostAccess` (redirects still need the existing host permissions)
+- Includes a `browser_specific_settings.gecko` extension id for Firefox
+
 ## 1.0.1
 
 - Added support for replacing Calendar, Keep and Maps icons in the Google Workspace side panel.

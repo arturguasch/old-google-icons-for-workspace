@@ -209,7 +209,7 @@
   ],
   "permissions": [
     "alarms",
-    "declarativeNetRequest",
+    "declarativeNetRequestWithHostAccess",
     "storage"
   ],
   "host_permissions": [
@@ -224,7 +224,20 @@
     "https://www.gstatic.com/*"
   ],
   "background": {
-    "service_worker": "background.js"
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "old-google-icons-for-workspace@arturguasch.github.io",
+      "strict_min_version": "121.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    }
   },
   "short_name": "__MSG_extShortName__",
   "default_locale": "en",
