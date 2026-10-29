@@ -1,4 +1,4 @@
-Iconos antiguos de Google para Workspace recupera el estilo clásico de iconos de Google Workspace usado en años anteriores.
+Old Google Icons: Customize Workspace Icons recupera el estilo clásico de iconos de Google Workspace usado en años anteriores.
 
 Vuelve a usar iconos y favicons antiguos en aplicaciones compatibles para mejorar la identificación visual y reducir la confusión causada por los diseños unificados más recientes.
 

@@ -67,16 +67,8 @@
   const FAVICON_CACHE_KEY = `${chrome.runtime.getManifest().version}-${Date.now()}-${Math.random().toString(36).slice(2)}`;
   if (!CWI_SETTINGS) return;
 
-  function pad2(value) {
-    return String(value).padStart(2, "0");
-  }
-
   function calendarDay() {
     return new Date().getDate();
-  }
-
-  function calendarIconPath() {
-    return `icons/calendar-${pad2(calendarDay())}.webp`;
   }
 
   function appForCurrentPage() {
@@ -98,23 +90,31 @@
     }
 
     if (!matchedApp) return null;
-    if (cwiOptions && !CWI_SETTINGS.appEnabled(matchedApp, cwiOptions)) return null;
+    if (cwiOptions && (
+      !CWI_SETTINGS.appSurfaceEnabled(matchedApp, "favicon", cwiOptions)
+    )) return null;
 
     return matchedApp;
   }
 
   function iconPath(app) {
-    if (app === "calendar") return calendarIconPath();
-    return APPS[app].icon;
+    return CWI_SETTINGS.getIconPath(app, cwiOptions, calendarDay()) || APPS[app].icon;
   }
 
   function iconType(app) {
-    if (app === "calendar") return "image/webp";
-    return APPS[app].type || "image/svg+xml";
+    const path = iconPath(app);
+    if (path.startsWith("data:image/png")) return "image/png";
+    if (path.startsWith("data:image/webp")) return "image/webp";
+    if (path.startsWith("data:image/jpeg")) return "image/jpeg";
+    if (path.endsWith(".png")) return "image/png";
+    if (path.endsWith(".webp")) return "image/webp";
+    return "image/svg+xml";
   }
 
   function iconUrl(app) {
-    const base = chrome.runtime.getURL(iconPath(app));
+    const path = iconPath(app);
+    if (path.startsWith("data:")) return path;
+    const base = chrome.runtime.getURL(path);
     return `${base}?cwi=${encodeURIComponent(FAVICON_CACHE_KEY)}`;
   }
 
@@ -370,10 +370,8 @@
       }
     });
 
-    chrome.storage?.onChanged?.addListener((changes, areaName) => {
-      if (areaName !== "sync" || !changes.cwiOptions) return;
-      cwiOptions = CWI_SETTINGS.normalizeOptions(changes.cwiOptions.newValue);
-
+    CWI_SETTINGS.watchOptions(cwiOptions, (newOptions) => {
+      cwiOptions = newOptions;
       if (appForCurrentPage()) {
         activateFavicon();
         scheduleSetFavicon(20);

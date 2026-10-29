@@ -38,15 +38,16 @@
   let cwiOptions = null;
 
   function runtimeUrl(path) {
-    return chrome.runtime.getURL(path).replace(/\\/g, "\\\\").replace(/"/g, "\\\"");
+    const url = path.startsWith("data:") ? path : chrome.runtime.getURL(path);
+    return url.replace(/\\/g, "\\\\").replace(/"/g, "\\\"");
   }
 
-  function calendarIconPath() {
-    return `icons/calendar-${String(new Date().getDate()).padStart(2, "0")}.webp`;
+  function iconPath(app) {
+    return CWI_SETTINGS.getIconPath(app, cwiOptions, new Date().getDate());
   }
 
   function enabled(app) {
-    return CWI_SETTINGS.appEnabled(app, cwiOptions);
+    return CWI_SETTINGS.appSurfaceEnabled(app, "sidePanel", cwiOptions);
   }
 
   function replacementRule(app, url, selectors) {
@@ -67,14 +68,14 @@ ${selectors.join(",\n")} {
 
   function css() {
     const chunks = [
-      replacementRule("tasks", runtimeUrl("icons/tasks-classic.png"), [
+      replacementRule("tasks", runtimeUrl(iconPath("tasks")), [
         '.app-switcher-button-icon-container[style*="tasks_"]',
         '[style*="/companion/icon_assets/tasks_"]',
         '[style*="tasks_2026_2x"]',
         '.Yb-Il-d-c-j[style*="tasks_"]',
         '.aT5-aOt-I-JX-Jw[style*="tasks_"]'
       ]),
-      replacementRule("calendar", runtimeUrl(calendarIconPath()), [
+      replacementRule("calendar", runtimeUrl(iconPath("calendar")), [
         '.app-switcher-button[data-guest-app-id="6"] .app-switcher-button-icon-container',
         '[data-guest-app-id="6"] .app-switcher-button-icon-container',
         '.app-switcher-button-icon-container[style*="calendar_"]',
@@ -83,7 +84,7 @@ ${selectors.join(",\n")} {
         '.Yb-Il-d-c-j[style*="calendar_"]',
         '.aT5-aOt-I-JX-Jw[style*="calendar_"]'
       ]),
-      replacementRule("keep", runtimeUrl("icons/keep-classic.svg"), [
+      replacementRule("keep", runtimeUrl(iconPath("keep")), [
         '.app-switcher-button[data-guest-app-id="2"] .app-switcher-button-icon-container',
         '[data-guest-app-id="2"] .app-switcher-button-icon-container',
         '.app-switcher-button-icon-container[style*="keep_"]',
@@ -92,7 +93,7 @@ ${selectors.join(",\n")} {
         '.Yb-Il-d-c-j[style*="keep_"]',
         '.aT5-aOt-I-JX-Jw[style*="keep_"]'
       ]),
-      replacementRule("maps", runtimeUrl("icons/maps-classic.png"), [
+      replacementRule("maps", runtimeUrl(iconPath("maps")), [
         '.app-switcher-button[data-guest-app-id="8"] .app-switcher-button-icon-container',
         '[data-guest-app-id="8"] .app-switcher-button-icon-container',
         '.app-switcher-button-icon-container[style*="logo_maps"]',
@@ -163,9 +164,8 @@ ${selectors.join(",\n")} {
     window.addEventListener("focus", installStyle, { passive: true });
     scheduleMidnightRefresh();
 
-    chrome.storage?.onChanged?.addListener((changes, areaName) => {
-      if (areaName !== "sync" || !changes.cwiOptions) return;
-      cwiOptions = CWI_SETTINGS.normalizeOptions(changes.cwiOptions.newValue);
+    CWI_SETTINGS.watchOptions(cwiOptions, (newOptions) => {
+      cwiOptions = newOptions;
       installStyle();
     });
   });

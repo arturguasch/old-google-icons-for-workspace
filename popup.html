@@ -3,34 +3,85 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Old Google Icons for Workspace</title>
+  <title>Old Google Icons: Customize Workspace Icons</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
   <main class="panel">
-    <section class="hero">
+    <header class="hero">
       <img src="extension_icons/icon-48.png" alt="" class="hero-icon">
-      <div>
+      <div class="hero-copy">
+        <span class="eyebrow">PERSONALIZE YOUR WORKSPACE</span>
         <h1>Old Google Icons</h1>
-        <p>Classic icons for Google Workspace</p>
+        <p>Choose a classic look, upload your own, and decide where it appears.</p>
       </div>
-    </section>
+    </header>
 
-    <section class="card status-card">
-      <div>
-        <h2>Extension status</h2>
-        <p>Enable or pause all icon replacements.</p>
+    <section class="card master-card" aria-labelledby="masterTitle">
+      <div class="master-copy">
+        <span class="section-kicker">EXTENSION</span>
+        <h2 id="masterTitle">All replacements</h2>
+        <p>Pause or resume every icon change.</p>
       </div>
-      <label class="switch" aria-label="Enable extension">
+      <label class="switch master-switch" aria-label="Enable all replacements">
         <input type="checkbox" id="masterToggle">
         <span></span>
       </label>
     </section>
 
-    <section class="card">
+    <section class="card surface-card" aria-labelledby="surfacesTitle">
       <div class="section-title">
-        <h2>Apps</h2>
-        <span id="enabledCount">0 enabled</span>
+        <div>
+          <span class="section-kicker">GENERAL CONTROLS</span>
+          <h2 id="surfacesTitle">Icon locations</h2>
+          <p class="section-hint">Master switches for every app. App choices are saved below.</p>
+        </div>
+        <span class="count-badge" id="surfaceCount">4 / 4 on</span>
+      </div>
+      <div id="surfacesList" class="surface-grid">
+        <label class="surface-option">
+          <input type="checkbox" data-surface="favicon">
+          <span class="surface-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="4" y="3.5" width="16" height="17" rx="3"/><path d="M4 8h16"/><circle cx="8" cy="6" r=".6"/><circle cx="11" cy="6" r=".6"/></svg>
+          </span>
+          <span class="surface-copy"><strong>Browser tab &amp; bookmarks</strong><small>Icon shown in tabs and bookmarks</small></span>
+          <span class="surface-check" aria-hidden="true"></span>
+        </label>
+        <label class="surface-option">
+          <input type="checkbox" data-surface="header">
+          <span class="surface-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 6.5h16M4 11h10"/><circle cx="17.5" cy="16.5" r="3.5"/><path d="M20 19l1.5 1.5"/></svg>
+          </span>
+          <span class="surface-copy"><strong>Main app logo</strong><small>Logo shown at the top of each app</small></span>
+          <span class="surface-check" aria-hidden="true"></span>
+        </label>
+        <label class="surface-option">
+          <input type="checkbox" data-surface="launcher">
+          <span class="surface-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/></svg>
+          </span>
+          <span class="surface-copy"><strong>Google apps menu</strong><small>In-page launcher</small></span>
+          <span class="surface-check" aria-hidden="true"></span>
+        </label>
+        <label class="surface-option">
+          <input type="checkbox" data-surface="sidePanel">
+          <span class="surface-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="16" rx="2.5"/><path d="M14 4v16M7.5 8h3M7.5 12h3M7.5 16h3"/></svg>
+          </span>
+          <span class="surface-copy"><strong>Workspace side panel</strong><small>Calendar, Keep, Maps, Tasks</small></span>
+          <span class="surface-check" aria-hidden="true"></span>
+        </label>
+      </div>
+    </section>
+
+    <section class="apps-section" aria-labelledby="appsTitle">
+      <div class="section-title apps-title">
+        <div>
+          <span class="section-kicker">YOUR APPS</span>
+          <h2 id="appsTitle">Personalize each app</h2>
+          <p class="section-hint">Open an app to choose a classic or custom icon.</p>
+        </div>
+        <span class="count-badge" id="enabledCount">18 / 18 on</span>
       </div>
       <div id="appsList" class="apps-list"></div>
     </section>
@@ -40,10 +91,10 @@
       <button type="button" id="reportButton" class="secondary-button">Report an issue</button>
     </section>
 
-    <section class="privacy">
-      <p class="privacy-copy"><strong>Privacy:</strong> we do not collect, sell or share personal data. This extension <strong>is free and privacy-friendly</strong>, so any <strong>optional support is greatly appreciated</strong>. Read the <a id="privacyLink" href="https://arturguasch.github.io/old-google-icons-for-workspace/" target="_blank" rel="noopener noreferrer">privacy policy</a>.</p>
-      <p class="version">Version <span id="versionText">1.0.7</span></p>
-    </section>
+    <footer class="footer">
+      <p class="privacy-copy"><strong>Privacy first.</strong> We do not collect, sell or share personal data. <a id="privacyLink" href="https://arturguasch.github.io/old-google-icons-for-workspace/" target="_blank" rel="noopener noreferrer">Privacy policy</a></p>
+      <p class="version">Version <span id="versionText">1.0.8</span></p>
+    </footer>
   </main>
 
   <script src="cwi-settings.js"></script>

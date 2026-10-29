@@ -173,7 +173,7 @@
     let observer = null;
 
     function currentEnabled() {
-      return CWI_SETTINGS.appEnabled(APP, cwiOptions);
+      return CWI_SETTINGS.appSurfaceEnabled(APP, "header", cwiOptions);
     }
 
     const CFG = APPS[APP];
@@ -201,16 +201,34 @@
       document.documentElement.setAttribute("data-cwi-header-css-detection", "1");
     }
 
-    if (document.getElementById("classic-workspace-header-icon-style-v30")) return;
-
-    const style = document.createElement("style");
-    style.id = "classic-workspace-header-icon-style-v30";
+    let style = document.getElementById("classic-workspace-header-icon-style-v30");
+    if (!style) {
+      style = document.createElement("style");
+      style.id = "classic-workspace-header-icon-style-v30";
+      (document.head || document.documentElement).appendChild(style);
+    }
     style.textContent = `
       #docs-branding-logo[data-cwi-vids-header-icon="1"] {
         background-image: url("${iconUrl("vids")}") !important;
         background-repeat: no-repeat !important;
         background-position: center !important;
         background-size: contain !important;
+      }
+      #docs-branding-logo[data-cwi-slides-header-icon="1"] {
+        background-image: url("${iconUrl("slides")}") !important;
+        background-repeat: no-repeat !important;
+        background-position: center !important;
+        background-size: contain !important;
+        transition: none !important;
+        animation: none !important;
+      }
+      #docs-branding-logo[data-cwi-slides-header-icon="1"] *,
+      #docs-branding-logo[data-cwi-slides-header-icon="1"]::before,
+      #docs-branding-logo[data-cwi-slides-header-icon="1"]::after {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        transition: none !important;
+        animation: none !important;
       }
       #docs-branding-logo[data-cwi-vids-header-icon="1"] *,
       #docs-branding-logo[data-cwi-vids-header-icon="1"]::before,
@@ -289,11 +307,6 @@
         letter-spacing: -0.2px !important;
       }
     `;
-    (document.head || document.documentElement).appendChild(style);
-  }
-
-  function pad2(value) {
-    return String(value).padStart(2, "0");
   }
 
   function day() {
@@ -301,12 +314,11 @@
   }
 
   function iconPath(app) {
-    if (app === "calendar") return `icons/calendar-${pad2(day())}.webp`;
-    return APPS[app].icon;
+    return CWI_SETTINGS.getIconPath(app, cwiOptions, day()) || APPS[app].icon;
   }
 
   function iconUrl(app) {
-    return chrome.runtime.getURL(iconPath(app));
+    return CWI_SETTINGS.getIconUrl(app, cwiOptions, day()) || chrome.runtime.getURL(iconPath(app));
   }
 
   function isTransparent(color) {
@@ -358,8 +370,9 @@
   }
 
   function clearHeaderMarks() {
-    document.querySelectorAll("[data-cwi-header-original-icon='1'], [data-cwi-header-original-lockup='1'], [data-cwi-vids-header-icon='1']").forEach((el) => {
+    document.querySelectorAll("[data-cwi-header-original-icon='1'], [data-cwi-header-original-lockup='1'], [data-cwi-vids-header-icon='1'], [data-cwi-slides-header-icon='1']").forEach((el) => {
       el.removeAttribute("data-cwi-vids-header-icon");
+      el.removeAttribute("data-cwi-slides-header-icon");
       el.removeAttribute("data-cwi-header-original-icon");
       el.removeAttribute("data-cwi-header-original-lockup");
     });
@@ -699,6 +712,20 @@
     injectStyle();
 
     const target = findHeaderLogoElement();
+    // Presentations keeps a Drive logo and an app logo in the same branding
+    // link and can swap their visibility during header updates. Paint the
+    // stable app-logo box directly so those competing slots cannot move the
+    // detached replacement overlay between positions.
+    if (APP === "slides" && target?.id === "docs-branding-logo") {
+      document.getElementById(OVERLAY_ID)?.remove();
+      target.removeAttribute("data-cwi-header-original-icon");
+      target.removeAttribute("data-cwi-header-original-lockup");
+      if (target.getAttribute("data-cwi-slides-header-icon") !== "1") {
+        target.setAttribute("data-cwi-slides-header-icon", "1");
+      }
+      missingTargetCount = 0;
+      return;
+    }
     // Paint Vids in its native branding box so later editor stacking layers
     // cannot cover a detached overlay while the original logo stays hidden.
     if (APP === "vids" && target?.id === "docs-branding-logo") {
@@ -878,10 +905,8 @@
     }
   });
 
-  chrome.storage?.onChanged?.addListener((changes, areaName) => {
-    if (areaName !== "sync" || !changes.cwiOptions) return;
-    cwiOptions = CWI_SETTINGS.normalizeOptions(changes.cwiOptions.newValue);
-
+  CWI_SETTINGS.watchOptions(cwiOptions, (newOptions) => {
+    cwiOptions = newOptions;
     if (currentEnabled()) {
       start();
       schedule(20);
