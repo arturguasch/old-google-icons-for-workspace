@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "__MSG_extDescription__",
   "icons": {
     "16": "extension_icons/icon-16.png",
@@ -186,7 +186,10 @@
       "resources": [
         "icons/*.png",
         "icons/*.svg",
-        "icons/*.webp"
+        "icons/*.webp",
+        "icons/calendar-legacy-days/*",
+        "icons/legacy-2014-2020/*",
+        "icons/legacy-earlier-eras/*"
       ],
       "matches": [
         "https://*.google.cat/*",
@@ -228,6 +231,16 @@
       "background.js"
     ]
   },
+  "short_name": "__MSG_extShortName__",
+  "default_locale": "en",
+  "action": {
+    "default_icon": {
+      "16": "extension_icons/icon-16.png",
+      "32": "extension_icons/icon-32.png",
+      "48": "extension_icons/icon-48.png"
+    },
+    "default_popup": "popup.html"
+  },
   "browser_specific_settings": {
     "gecko": {
       "id": "old-google-icons-for-workspace@arturguasch.github.io",
@@ -238,15 +251,5 @@
         ]
       }
     }
-  },
-  "short_name": "__MSG_extShortName__",
-  "default_locale": "en",
-  "action": {
-    "default_icon": {
-      "16": "extension_icons/icon-16.png",
-      "32": "extension_icons/icon-32.png",
-      "48": "extension_icons/icon-48.png"
-    },
-    "default_popup": "popup.html"
   }
 }

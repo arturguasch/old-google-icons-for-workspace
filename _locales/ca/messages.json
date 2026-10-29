@@ -1,7 +1,7 @@
 {
   "extName": {
-    "message": "Icones antigues de Google per a Workspace",
-    "description": "Nom principal. Alternativa secundària: Icones antigues de Google per a Workspace"
+    "message": "Old Google Icons: Customize Workspace Icons",
+    "description": "Nom principal de l'extensió"
   },
   "extShortName": {
     "message": "Icones antigues Google",
@@ -12,7 +12,7 @@
     "description": "Descripció curta en català"
   },
   "secondaryTitle": {
-    "message": "Icones antigues de Google per a Workspace",
+    "message": "Old Google Icons: Customize Workspace Icons",
     "description": "Alternativa secundària per a la fitxa localitzada"
   }
 }

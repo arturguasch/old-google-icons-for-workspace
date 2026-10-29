@@ -111,12 +111,8 @@
   if (!CWI_SETTINGS) return;
 
   function enabledItems() {
-    if (!cwiOptions || cwiOptions.enabled === false) return [];
-    return APPS.filter((item) => CWI_SETTINGS.appEnabled(item.app, cwiOptions));
-  }
-
-  function pad2(value) {
-    return String(value).padStart(2, "0");
+    if (!cwiOptions) return [];
+    return APPS.filter((item) => CWI_SETTINGS.appSurfaceEnabled(item.app, "launcher", cwiOptions));
   }
 
   function day() {
@@ -124,12 +120,11 @@
   }
 
   function iconPath(item) {
-    if (item.app === "calendar") return `icons/calendar-${pad2(day())}.webp`;
-    return item.icon;
+    return CWI_SETTINGS.getIconPath(item.app, cwiOptions, day()) || item.icon;
   }
 
   function iconUrl(item) {
-    return chrome.runtime.getURL(iconPath(item));
+    return CWI_SETTINGS.getIconUrl(item.app, cwiOptions, day()) || chrome.runtime.getURL(iconPath(item));
   }
 
   function cssEscapeUrl(url) {
@@ -1058,10 +1053,8 @@ a[data-cwi-launcher-app] [data-cwi-launcher-label-align="1"] {
       if (!document.hidden) schedule(60);
     });
 
-    chrome.storage?.onChanged?.addListener((changes, areaName) => {
-      if (areaName !== "sync" || !changes.cwiOptions) return;
-      cwiOptions = CWI_SETTINGS.normalizeOptions(changes.cwiOptions.newValue);
-
+    CWI_SETTINGS.watchOptions(cwiOptions, (newOptions) => {
+      cwiOptions = newOptions;
       cleanupPausedPage();
       if (enabledItems().length === 0 || cwiShouldPauseOnThisPage()) {
         stop();

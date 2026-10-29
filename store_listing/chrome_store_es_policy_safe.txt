@@ -1,16 +1,19 @@
-Iconos antiguos de Google para Workspace recupera el estilo clásico de iconos de Google Workspace usado en años anteriores.
+Old Google Icons: Customize Workspace Icons recupera el aspecto clásico de 2020 de las aplicaciones compatibles de Google Workspace, con diseños aún más antiguos para muchos iconos.
 
-Vuelve a usar iconos y favicons antiguos en aplicaciones compatibles para mejorar la identificación visual y reducir la confusión causada por los diseños unificados más recientes.
+Elige el diseño clásico de cada aplicación, incluidos los 31 iconos de Calendar que cambian según el día, o carga un icono propio. Decide dónde aparecen las sustituciones: pestañas y marcadores, encabezados de las aplicaciones, menú de aplicaciones de Google y paneles laterales de Workspace compatibles.
 
 Funciones:
-• Iconos clásicos en pestañas
-• Iconos restaurados en el lanzador de aplicaciones
-• Icono dinámico de calendario
-• Compatible con modo claro y oscuro
-• Ligera y totalmente local
+• Diseños clásicos, con el aspecto de 2020 seleccionado de forma predeterminada
+• Controles independientes por aplicación y ubicación
+• Iconos propios cuadrados en PNG, JPG o WebP (32–2048 px, hasta 5 MB), optimizados a 128 × 128 px y guardados en este dispositivo
+• Anillo multicolor clásico de la cuenta de Google, con interruptor propio, en las superficies compatibles
+• Compatibilidad con temas claros y oscuros
+• Cambios de icono inmediatos en las páginas abiertas
+• Ligera y local
 
-Ideal para usuarios que prefieren el aspecto anterior de Workspace y quieren reconocer mejor sus aplicaciones.
+La extensión no recopila ni transmite datos personales. Los iconos propios se guardan en este dispositivo.
 
-Esta extensión no recopila datos personales.
+Old Google Icons: Customize Workspace Icons es gratuita. Si te resulta útil y quieres apoyar su mantenimiento, puedes hacerlo aquí:
+https://buymeacoffee.com/openextensions
 
-No afiliada ni respaldada por Google.
+No está afiliada a Google ni cuenta con su respaldo.

@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Choose a custom icon · Old Google Icons</title>
+  <link rel="stylesheet" href="custom-icon-upload.css">
+</head>
+<body>
+  <main class="upload-page">
+    <header class="brand">
+      <img src="extension_icons/icon-48.png" alt="">
+      <div>
+        <p class="eyebrow">OLD GOOGLE ICONS</p>
+        <h1>Choose a custom icon</h1>
+        <p class="intro">Select an image for <strong id="appName">your app</strong>. It will be saved on this device.</p>
+      </div>
+    </header>
+
+    <section class="upload-card" aria-labelledby="uploadTitle">
+      <div id="dropZone" class="drop-zone" tabindex="0" role="button" aria-label="Drop an image here or choose a file">
+        <img id="preview" alt="Preview of the selected icon" hidden>
+        <span id="dropPrompt" class="drop-prompt"><strong>Drop your image here</strong><small>or choose a file below</small></span>
+      </div>
+      <h2 id="uploadTitle">Your image</h2>
+      <p class="hint">Square PNG, JPG or WebP · 32–2048 px · max. 5 MB. The image is optimized to 128 × 128 px.</p>
+      <label class="file-button" for="imageInput">Choose image</label>
+      <input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp">
+      <p id="status" class="status" role="status" aria-live="polite">Your image stays in this browser and is not uploaded to a server.</p>
+    </section>
+
+    <p class="return-note">After it is saved, return to the extension popup to see and manage your icon.</p>
+  </main>
+  <script src="cwi-settings.js"></script>
+  <script src="custom-icon-upload.js"></script>
+</body>
+</html>

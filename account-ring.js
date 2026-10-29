@@ -81,8 +81,7 @@
   const RING_IMG_RE = /(?:ssl|www)\.gstatic\.com\/gb\/images\/ring\//i;
   const EXT_RING_RE = /account-ring-(?:classic|test)\.svg/i;
 
-  // Snapshot of original SVG children via cloneNode (safe DOM restore for AMO).
-  const originalSvgSnapshots = new WeakMap();
+  const originalMarkup = new WeakMap();
   const originalImgAttrs = new WeakMap();
   let cwiOptions = null;
   let observer = null;
@@ -154,20 +153,7 @@
   }
 
   function rememberOriginal(svg) {
-    if (!originalSvgSnapshots.has(svg)) {
-      originalSvgSnapshots.set(svg, svg.cloneNode(true));
-    }
-  }
-
-  function restoreSvgContents(svg) {
-    const snapshot = originalSvgSnapshots.get(svg);
-    if (!snapshot) return;
-
-    while (svg.firstChild) svg.removeChild(svg.firstChild);
-
-    for (const child of snapshot.childNodes) {
-      svg.appendChild(child.cloneNode(true));
-    }
+    if (!originalMarkup.has(svg)) originalMarkup.set(svg, svg.innerHTML);
   }
 
   function paintClassicFills(svg) {
@@ -303,7 +289,8 @@
       restoreRingImgs();
 
       for (const svg of document.querySelectorAll('svg[data-cwi-account-ring="1"]')) {
-        restoreSvgContents(svg);
+        const markup = originalMarkup.get(svg);
+        if (markup !== undefined) svg.innerHTML = markup;
         delete svg.dataset.cwiAccountRing;
       }
     } finally {

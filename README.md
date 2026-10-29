@@ -1,6 +1,6 @@
-# Old Google Icons for Workspace
+# Old Google Icons: Customize Workspace Icons
 
-Restore the classic Google Workspace icons in the browser tab, app header, Google app launcher and supported side panels.
+Restore classic Google Workspace icons in browser tabs and bookmarks, app headers, the Google apps menu and supported Workspace side panels. Choose a classic design for each app or use your own image.
 
 Supported apps: Gmail, Calendar, Drive, Docs, Sheets, Slides, Forms, Meet, Chat, Keep, Maps, Vids, Tasks, Voice and Sites, plus Google Photos and Google Wallet. Each app has its own on/off switch. Header replacements apply where a supported product logo is detected; the side panel supports Calendar, Keep, Maps and Tasks.
 
@@ -9,26 +9,10 @@ My goal with browser extensions is to keep them simple, accessible and free for 
 If you find my work useful, any support is greatly appreciated and helps me keep maintaining and improving these projects.
 https://buymeacoffee.com/openextensions
 
-You can install and keep the extension easily configured from the Chrome Web Store:
-https://chromewebstore.google.com/detail/old-google-icons-for-work/fmjfppfhcmngnmmlpellgekebpcmiagj?authuser=1&hl=en
+This Firefox build is packaged separately from the Chrome version. Its Firefox-specific manifest keeps the same 1.0.8 features and settings. Install it from Mozilla Add-ons:
+https://addons.mozilla.org/es-ES/firefox/addon/old-google-icons-for-workspace/
 
-## Firefox (this package)
-
-This build is Manifest V3 for **Mozilla Firefox** (121+).
-
-Temporary install for testing:
-
-1. Open `about:debugging#/runtime/this-firefox`
-2. Click **Load Temporary Add-on…**
-3. Select this package’s `manifest.json` (or the `.zip`)
-
-Permanent install goes through [addons.mozilla.org](https://addons.mozilla.org/) after signing.
-
-Firefox differences vs the Chrome build:
-
-- Background uses an event page (`background.scripts`) instead of a service worker
-- Uses `declarativeNetRequestWithHostAccess` (redirects still need the existing host permissions)
-- Includes a `browser_specific_settings.gecko` extension id for Firefox
+The extension was previously named “Old Google Icons for Workspace”. It is now called “Old Google Icons: Customize Workspace Icons” to better describe its classic icon styles and custom icon options.
 
 ## 1.0.1
 
@@ -65,8 +49,22 @@ Firefox differences vs the Chrome build:
 - Restored the classic multicolour Google account ring (red, yellow, green, blue)
   in place of the redesigned blue AI-style ring.
 
-## What's new in 1.0.7
+## 1.0.7
 
 - Added support for Google Vids, Tasks, Voice, Sites, Photos and Wallet, with classic icons and individual on/off switches. Google Tasks is also supported in the Workspace side panel.
 - Fixed the Drive header icon appearing over file previews. The classic icon now stays below preview and dialog layers.
 - Fixed the Gmail logo text appearing blue. It now uses a neutral colour matched to the header background in light and dark themes.
+
+## What's new in 1.0.8
+
+- Redesigned the popup with a wider, clearer layout, global controls and expandable settings for each app.
+- Added independent per-app switches for browser tabs and bookmarks, the main app logo, the Google apps menu and the Workspace side panel. Existing installations keep all locations enabled by default.
+- Added classic icon choices from older Google designs, including the 31 date-specific Calendar icons. The 2020-era design is selected by default.
+- Added custom icons for each app. Upload a square PNG, JPG or WebP image (32–2048 px, up to 5 MB); it is optimized to 128 × 128 px and stored on this device.
+- Fixed the Google Slides header icon rotating between competing Drive and Slides logo slots.
+- Renamed the extension from “Old Google Icons for Workspace” to “Old Google Icons: Customize Workspace Icons” to better reflect its icon customization features.
+
+
+
+
+
