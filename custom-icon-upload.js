@@ -2,7 +2,7 @@
   const APP_LABELS = {
     gmail: "Gmail", calendar: "Calendar", drive: "Drive", docs: "Docs",
     sheets: "Sheets", slides: "Slides", forms: "Forms", meet: "Meet",
-    chat: "Chat", keep: "Keep", maps: "Maps", vids: "Vids", tasks: "Tasks",
+    chat: "Chat", contacts: "Contacts", keep: "Keep", maps: "Maps", vids: "Vids", tasks: "Tasks",
     voice: "Voice", sites: "Sites", photos: "Photos", wallet: "Wallet"
   };
   const params = new URLSearchParams(location.search);

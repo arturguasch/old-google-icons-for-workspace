@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "__MSG_extDescription__",
   "icons": {
     "16": "extension_icons/icon-16.png",
@@ -28,7 +28,8 @@
         "https://voice.google.com/*",
         "https://sites.google.com/*",
         "https://photos.google.com/*",
-        "https://wallet.google.com/*"
+        "https://wallet.google.com/*",
+        "https://contacts.google.com/*"
       ],
       "js": [
         "cwi-settings.js",
@@ -64,7 +65,8 @@
         "https://voice.google.com/*",
         "https://sites.google.com/*",
         "https://photos.google.com/*",
-        "https://wallet.google.com/*"
+        "https://wallet.google.com/*",
+        "https://contacts.google.com/*"
       ],
       "js": [
         "cwi-settings.js",
@@ -99,7 +101,8 @@
         "https://voice.google.com/*",
         "https://sites.google.com/*",
         "https://photos.google.com/*",
-        "https://wallet.google.com/*"
+        "https://wallet.google.com/*",
+        "https://contacts.google.com/*"
       ],
       "js": [
         "cwi-settings.js",
@@ -161,7 +164,8 @@
         "https://voice.google.com/*",
         "https://sites.google.com/*",
         "https://photos.google.com/*",
-        "https://wallet.google.com/*"
+        "https://wallet.google.com/*",
+        "https://contacts.google.com/*"
       ],
       "js": [
         "cwi-settings.js",
@@ -189,7 +193,8 @@
         "icons/*.webp",
         "icons/calendar-legacy-days/*",
         "icons/legacy-2014-2020/*",
-        "icons/legacy-earlier-eras/*"
+        "icons/legacy-earlier-eras/*",
+        "icons/contacts-legacy/*"
       ],
       "matches": [
         "https://*.google.cat/*",

@@ -7,19 +7,20 @@
     { key: "calendar", label: "Calendar", icon: "icons/calendar-01.webp" },
     { key: "drive", label: "Drive", icon: "icons/drive-classic.svg" },
     { key: "docs", label: "Docs", icon: "icons/docs-classic.svg" },
-    { key: "sheets", label: "Sheets", icon: "icons/sheets-classic.svg" },
     { key: "slides", label: "Slides", icon: "icons/slides-classic.svg" },
+    { key: "sheets", label: "Sheets", icon: "icons/sheets-classic.svg" },
     { key: "forms", label: "Forms", icon: "icons/forms-classic.png" },
     { key: "meet", label: "Meet", icon: "icons/meet-classic.svg" },
-    { key: "chat", label: "Chat", icon: "icons/chat-classic.svg" },
     { key: "keep", label: "Keep", icon: "icons/keep-classic.svg" },
     { key: "maps", label: "Maps", icon: "icons/maps-classic.png" },
-    { key: "vids", label: "Vids", icon: "icons/vids-classic.png" },
-    { key: "tasks", label: "Tasks", icon: "icons/tasks-classic.png" },
-    { key: "voice", label: "Voice", icon: "icons/voice-classic.svg" },
-    { key: "sites", label: "Sites", icon: "icons/sites-classic.svg" },
     { key: "photos", label: "Photos", icon: "icons/photos-classic.png" },
+    { key: "tasks", label: "Tasks", icon: "icons/tasks-classic.png" },
+    { key: "chat", label: "Chat", icon: "icons/chat-classic.svg" },
+    { key: "contacts", label: "Contacts", icon: "icons/contacts-legacy/2018_contacts.png" },
+    { key: "sites", label: "Sites", icon: "icons/sites-classic.svg" },
+    { key: "voice", label: "Voice", icon: "icons/voice-classic.svg" },
     { key: "wallet", label: "Wallet", icon: "icons/wallet-classic.svg" },
+    { key: "vids", label: "Vids", icon: "icons/vids-classic.png" },
     { key: "ring", label: "Account ring", icon: "icons/account-ring-classic.svg" }
   ];
 
@@ -27,9 +28,9 @@
     { key: "favicon", label: "Browser tab & bookmarks", shortLabel: "Tab & bookmarks", detail: "Icon shown in tabs and bookmarks", icon: '<rect x="4" y="3.5" width="16" height="17" rx="3"/><path d="M4 8h16"/><circle cx="8" cy="6" r=".6"/><circle cx="11" cy="6" r=".6"/>' },
     { key: "header", label: "Main app logo", shortLabel: "Main app logo", detail: "Logo shown at the top of each app", icon: '<path d="M4 6.5h16M4 11h10"/><circle cx="17.5" cy="16.5" r="3.5"/><path d="M20 19l1.5 1.5"/>' },
     { key: "launcher", label: "Google apps menu", shortLabel: "Apps menu", detail: "In-page Google apps launcher", icon: '<circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/>' },
-    { key: "sidePanel", label: "Workspace side panel", shortLabel: "Side panel", detail: "Calendar, Keep, Maps, Tasks", icon: '<rect x="3.5" y="4" width="17" height="16" rx="2.5"/><path d="M14 4v16M7.5 8h3M7.5 12h3M7.5 16h3"/>' }
+    { key: "sidePanel", label: "Workspace side panel", shortLabel: "Side panel", detail: "Calendar, Contacts, Keep, Maps, Tasks", icon: '<rect x="3.5" y="4" width="17" height="16" rx="2.5"/><path d="M14 4v16M7.5 8h3M7.5 12h3M7.5 16h3"/>' }
   ];
-  const SIDE_PANEL_APPS = new Set(["calendar", "keep", "maps", "tasks"]);
+  const SIDE_PANEL_APPS = new Set(["calendar", "contacts", "keep", "maps", "tasks"]);
   const settings = globalThis.__CWI_SETTINGS__;
   const masterToggle = document.getElementById("masterToggle");
   const surfacesList = document.getElementById("surfacesList");

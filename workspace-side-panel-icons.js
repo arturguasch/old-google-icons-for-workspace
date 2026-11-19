@@ -84,6 +84,9 @@ ${selectors.join(",\n")} {
         '.Yb-Il-d-c-j[style*="calendar_"]',
         '.aT5-aOt-I-JX-Jw[style*="calendar_"]'
       ]),
+      replacementRule("contacts", runtimeUrl(iconPath("contacts")), [
+        '.Yb-Il-d-c-j[style*="contacts_"]'
+      ]),
       replacementRule("keep", runtimeUrl(iconPath("keep")), [
         '.app-switcher-button[data-guest-app-id="2"] .app-switcher-button-icon-container',
         '[data-guest-app-id="2"] .app-switcher-button-icon-container',
