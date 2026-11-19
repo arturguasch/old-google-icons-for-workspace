@@ -37,6 +37,7 @@
     sites: {"icon": "icons/sites-classic.svg", "hosts": ["sites.google.com"], "keywords": ["sites", "logo_sites"], "maxLeft": 260, "maxTop": 110, "minScore": 30, "sizeMin": 24, "sizeMax": 38, "requireKeyword": true},
     photos: {"icon": "icons/photos-classic.png", "hosts": ["photos.google.com"], "keywords": ["photos", "logo_photos"], "maxLeft": 260, "maxTop": 110, "minScore": 30, "sizeMin": 24, "sizeMax": 38, "requireKeyword": true},
     wallet: {"icon": "icons/wallet-classic.svg", "hosts": ["wallet.google.com"], "keywords": ["wallet", "logo_wallet"], "maxLeft": 260, "maxTop": 110, "minScore": 30, "sizeMin": 24, "sizeMax": 38, "requireKeyword": true},
+    contacts: {"icon": "icons/contacts-legacy/2018_contacts.png", "hosts": ["contacts.google.com"], "keywords": ["contacts", "contacts_2026", "logo_contacts"], "maxLeft": 260, "maxTop": 110, "minScore": 30, "sizeMin": 24, "sizeMax": 40, "requireKeyword": true},
     gmail: {
       icon: "icons/gmail-classic.svg",
       hosts: ["mail.google.com"],

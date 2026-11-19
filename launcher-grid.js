@@ -45,6 +45,7 @@
     {"app": "sites", "icon": "icons/sites-classic.svg", "selectors": ["a[href*=\"sites.google.com\"]"]},
     {"app": "photos", "icon": "icons/photos-classic.png", "selectors": ["a[href*=\"photos.google.com\"]"]},
     {"app": "wallet", "icon": "icons/wallet-classic.svg", "selectors": ["a[href*=\"wallet.google.com\"]"]},
+    {"app": "contacts", "icon": "icons/contacts-legacy/2018_contacts.png", "selectors": ["a[href*=\"contacts.google.com\"]"]},
     {
       app: "drive",
       icon: "icons/drive-classic.svg",

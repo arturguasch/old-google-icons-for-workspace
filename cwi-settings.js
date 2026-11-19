@@ -3,6 +3,7 @@
 
   const APP_KEYS = [
     "gmail",
+    "contacts",
     "calendar",
     "drive",
     "docs",
@@ -29,6 +30,12 @@
       { id: "2020", label: "2020 · Workspace colors", path: "icons/gmail-classic.svg" },
       { id: "2014-2020", label: "2014–2020 · Red and white", path: "icons/legacy-2014-2020/2014_gmail_favicon.png" },
       { id: "2011-2014", label: "2011–2014 · Classic envelope", path: "icons/legacy-earlier-eras/2011_gmail.svg" }
+    ],
+    contacts: [
+      { id: "2022", label: "2022 · Two-tone person", path: "icons/contacts-legacy/2022_contacts.png" },
+      { id: "2020", label: "2018–2022 · Blue circle", path: "icons/contacts-legacy/2018_contacts.png" },
+      { id: "2016", label: "2016 · Blue address book", path: "icons/contacts-legacy/2016_contacts.png" },
+      { id: "2015", label: "2015 · Classic contact card", path: "icons/contacts-legacy/2015_contacts.png" }
     ],
     calendar: [
       { id: "2020", label: "2020 · Four-color", dayPath: (day) => `icons/calendar-${pad2(day)}.webp` },

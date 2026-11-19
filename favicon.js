@@ -35,6 +35,7 @@
     photos: {"icon": "icons/photos-classic.png", "hosts": ["photos.google.com"], "type": "image/png"},
     wallet: {"icon": "icons/wallet-classic.svg", "hosts": ["wallet.google.com"], "type": "image/svg+xml"},
     gmail: { icon: "icons/gmail-classic.svg", hosts: ["mail.google.com"], type: "image/svg+xml" },
+    contacts: { icon: "icons/contacts-legacy/2018_contacts.png", hosts: ["contacts.google.com"], type: "image/png", hardLock: true },
     calendar: { hosts: ["calendar.google.com"], hardLock: true },
     drive: { icon: "icons/drive-classic.svg", hosts: ["drive.google.com"], type: "image/svg+xml" },
     docs: { icon: "icons/docs-classic.svg", urlIncludes: ["docs.google.com/document"], type: "image/svg+xml" },
@@ -182,7 +183,7 @@
   function setFavicon() {
     const app = appForCurrentPage();
     if (!app || !document.head) {
-      if (cwiOptions && cwiOptions.enabled === false) cleanupFaviconState();
+      if (cwiOptions && (!app || cwiOptions.enabled === false)) cleanupFaviconState();
       return;
     }
 
@@ -296,11 +297,6 @@
     });
   }
 
-  function pulseCalendarLock() {
-    if (appForCurrentPage() !== "calendar") return;
-    pulseHardLock();
-  }
-
   function scheduleCalendarMidnightRefresh() {
     if (location.hostname !== "calendar.google.com") return;
 
@@ -313,7 +309,7 @@
 
     midnightTimer = setTimeout(() => {
       lastCalendarDay = null;
-      pulseCalendarLock();
+      pulseHardLock();
       scheduleCalendarMidnightRefresh();
     }, delay);
   }
@@ -323,7 +319,7 @@
 
     const day = calendarDay();
     if (lastCalendarDay !== day) {
-      pulseCalendarLock();
+      pulseHardLock();
     }
   }
 
@@ -336,7 +332,7 @@
     ensureHead(() => {
       setFavicon();
       startObserver();
-      pulseCalendarLock();
+      pulseHardLock();
       scheduleCalendarMidnightRefresh();
     });
   }
@@ -348,25 +344,25 @@
 
     window.addEventListener("DOMContentLoaded", () => {
       scheduleSetFavicon(30);
-      pulseCalendarLock();
+      pulseHardLock();
     }, { once: true });
 
     window.addEventListener("load", () => {
       scheduleSetFavicon(120);
-      pulseCalendarLock();
+      pulseHardLock();
     }, { once: true });
 
     window.addEventListener("focus", () => {
       checkCalendarDayChange();
       scheduleSetFavicon(50);
-      pulseCalendarLock();
+      pulseHardLock();
     });
 
     document.addEventListener("visibilitychange", () => {
       if (!document.hidden) {
         checkCalendarDayChange();
         scheduleSetFavicon(50);
-        pulseCalendarLock();
+        pulseHardLock();
       }
     });
 
@@ -381,9 +377,9 @@
     });
 
     if (location.hostname === "calendar.google.com") {
-      document.addEventListener("click", () => pulseCalendarLock(), true);
-      window.addEventListener("popstate", () => pulseCalendarLock());
-      window.addEventListener("hashchange", () => pulseCalendarLock());
+      document.addEventListener("click", () => pulseHardLock(), true);
+      window.addEventListener("popstate", () => pulseHardLock());
+      window.addEventListener("hashchange", () => pulseHardLock());
       setInterval(checkCalendarDayChange, 60 * 1000);
     }
 
