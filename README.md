@@ -2,7 +2,7 @@
 
 Restore classic Google Workspace icons in browser tabs and bookmarks, app headers, the Google apps menu and supported Workspace side panels. Choose a classic design for each app or use your own image.
 
-Supported apps: Gmail, Contacts, Calendar, Drive, Docs, Sheets, Slides, Forms, Meet, Chat, Keep, Maps, Vids, Tasks, Voice and Sites, plus Google Photos and Google Wallet. Each app has its own on/off switch. Contacts includes four selectable historical designs from 2015, 2016, 2018–2022 and 2022. Header replacements apply where a supported product logo is detected; the side panel supports Calendar, Keep, Maps and Tasks.
+Supported apps: Gmail, Contacts, Calendar, Drive, Docs, Sheets, Slides, Forms, Meet, Chat, Keep, Maps, Vids, Tasks, Voice and Sites, plus Google Photos and Google Wallet. Each app has its own on/off switch. Contacts includes four selectable historical designs from 2015, 2016, 2018–2022 and 2022. Header replacements apply where a supported product logo is detected; the side panel supports Calendar, Contacts, Keep, Maps and Tasks.
 
 My goal with browser extensions is to keep them simple, accessible and free for everyone. I also care a lot about privacy: I do not want to build tools that secretly sell or misuse people's data, as many extensions unfortunately do.
 
@@ -14,7 +14,12 @@ https://addons.mozilla.org/es-ES/firefox/addon/old-google-icons-for-workspace/
 
 The extension was previously named “Old Google Icons for Workspace”. It is now called “Old Google Icons: Customize Workspace Icons” to better describe its classic icon styles and custom icon options.
 
-## What's new in 1.0.9
+## What's new in 1.1.0
+
+- Added a separate control to restore the classic Meet icon on the presentation button in Google Docs, Slides and Sheets.
+- Fixed the Contacts icon replacement in Workspace side panels across supported Google pages, including Docs, Gmail, Calendar and Drive.
+
+## 1.0.9
 
 - Added Google Contacts with per-app controls for its browser tab and bookmarks, main app logo, and Google apps menu icon.
 - Added four selectable Contacts designs from 2015, 2016, 2018–2022 and 2022, with the 2018–2022 classic blue icon selected by default.

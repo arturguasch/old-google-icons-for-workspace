@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "__MSG_extDescription__",
   "icons": {
     "16": "extension_icons/icon-16.png",
@@ -10,6 +10,19 @@
     "128": "extension_icons/icon-128.png"
   },
   "content_scripts": [
+    {
+      "matches": [
+        "https://docs.google.com/document/*",
+        "https://docs.google.com/presentation/*",
+        "https://docs.google.com/spreadsheets/*"
+      ],
+      "js": [
+        "cwi-settings.js",
+        "meet-button-icon.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    },
     {
       "matches": [
         "https://calendar.google.com/*",
@@ -126,7 +139,17 @@
         "https://mail.google.com/*",
         "https://drive.google.com/*",
         "https://docs.google.com/*",
-        "https://calendar.google.com/*"
+        "https://calendar.google.com/*",
+        "https://chat.google.com/*",
+        "https://keep.google.com/*",
+        "https://meet.google.com/*",
+        "https://maps.google.com/*",
+        "https://tasks.google.com/*",
+        "https://contacts.google.com/*",
+        "https://sites.google.com/*",
+        "https://vids.google.com/*",
+        "https://photos.google.com/*",
+        "https://wallet.google.com/*"
       ],
       "js": [
         "cwi-settings.js",
