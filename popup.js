@@ -28,7 +28,8 @@
     { key: "favicon", label: "Browser tab & bookmarks", shortLabel: "Tab & bookmarks", detail: "Icon shown in tabs and bookmarks", icon: '<rect x="4" y="3.5" width="16" height="17" rx="3"/><path d="M4 8h16"/><circle cx="8" cy="6" r=".6"/><circle cx="11" cy="6" r=".6"/>' },
     { key: "header", label: "Main app logo", shortLabel: "Main app logo", detail: "Logo shown at the top of each app", icon: '<path d="M4 6.5h16M4 11h10"/><circle cx="17.5" cy="16.5" r="3.5"/><path d="M20 19l1.5 1.5"/>' },
     { key: "launcher", label: "Google apps menu", shortLabel: "Apps menu", detail: "In-page Google apps launcher", icon: '<circle cx="6" cy="6" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="6" r="1"/><circle cx="6" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="18" cy="12" r="1"/><circle cx="6" cy="18" r="1"/><circle cx="12" cy="18" r="1"/><circle cx="18" cy="18" r="1"/>' },
-    { key: "sidePanel", label: "Workspace side panel", shortLabel: "Side panel", detail: "Calendar, Contacts, Keep, Maps, Tasks", icon: '<rect x="3.5" y="4" width="17" height="16" rx="2.5"/><path d="M14 4v16M7.5 8h3M7.5 12h3M7.5 16h3"/>' }
+    { key: "sidePanel", label: "Workspace side panel", shortLabel: "Side panel", detail: "Calendar, Contacts, Keep, Maps, Tasks", icon: '<rect x="3.5" y="4" width="17" height="16" rx="2.5"/><path d="M14 4v16M7.5 8h3M7.5 12h3M7.5 16h3"/>' },
+    { key: "meetButton", label: "Meet presentation button", shortLabel: "Meet button", detail: "Present in Docs, Slides & Sheets", icon: '<rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3z"/>' }
   ];
   const SIDE_PANEL_APPS = new Set(["calendar", "contacts", "keep", "maps", "tasks"]);
   const settings = globalThis.__CWI_SETTINGS__;
@@ -54,15 +55,17 @@
 
   function appSupportsSurface(app, surface) {
     if (app.key === "ring") return surface.key === "header";
+    if (surface.key === "meetButton") return app.key === "meet";
     if (surface.key === "sidePanel") return SIDE_PANEL_APPS.has(app.key);
     return true;
   }
 
   function updateCounts() {
     const appsOn = APPS.filter((app) => options.apps[app.key] !== false).length;
-    const surfacesOn = SURFACES.filter((surface) => options.surfaces[surface.key] !== false).length;
+    const globalSurfaces = SURFACES.filter((surface) => surface.key !== "meetButton");
+    const surfacesOn = globalSurfaces.filter((surface) => options.surfaces[surface.key] !== false).length;
     enabledCount.textContent = `${appsOn} / ${APPS.length} on`;
-    surfaceCount.textContent = `${surfacesOn} / ${SURFACES.length} on`;
+    surfaceCount.textContent = `${surfacesOn} / ${globalSurfaces.length} on`;
   }
 
   function renderGlobalSurfaces() {
@@ -520,7 +523,10 @@
         detailsTitle.textContent = "Show classic icons in";
         const grid = document.createElement("div");
         grid.className = "app-surface-grid";
-        for (const surface of SURFACES) grid.append(makeSurfaceControl(app, surface));
+        for (const surface of SURFACES) {
+          if (surface.key === "meetButton" && app.key !== "meet") continue;
+          grid.append(makeSurfaceControl(app, surface));
+        }
         details.append(designPicker, detailsTitle, grid);
 
         identity.setAttribute("aria-controls", details.id);

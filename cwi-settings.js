@@ -22,7 +22,7 @@
     "wallet",
     "ring"
   ];
-  const SURFACE_KEYS = ["favicon", "header", "launcher", "sidePanel"];
+  const SURFACE_KEYS = ["favicon", "header", "launcher", "sidePanel", "meetButton"];
   const DEFAULT_DESIGN_ID = "2020";
   let customIconCache = {};
   const ICON_DESIGNS = {
@@ -157,7 +157,8 @@
       favicon: true,
       header: true,
       launcher: true,
-      sidePanel: true
+      sidePanel: true,
+      meetButton: true
     },
     appSurfaces: Object.fromEntries(APP_KEYS.map((app) => [
       app,
@@ -184,7 +185,8 @@
         favicon: sourceSurfaces.favicon !== false,
         header: sourceSurfaces.header !== false,
         launcher: sourceSurfaces.launcher !== false,
-        sidePanel: sourceSurfaces.sidePanel !== false
+        sidePanel: sourceSurfaces.sidePanel !== false,
+        meetButton: true
       },
       appSurfaces: Object.fromEntries(APP_KEYS.map((app) => {
         const appSurfaces = sourceAppSurfaces[app] && typeof sourceAppSurfaces[app] === "object"

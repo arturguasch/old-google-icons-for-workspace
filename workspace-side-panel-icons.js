@@ -33,7 +33,7 @@
 
   const STYLE_ID = "cwi-workspace-side-panel-icons-style";
   const VERSION_ATTR = "data-cwi-sidepanel-css-version";
-  const VERSION = "1.0.4-css-url-selectors-options";
+  const VERSION = "1.0.6-universal-contacts-sidebar";
   const ICON_SIZE = "24px";
   let cwiOptions = null;
 
@@ -85,7 +85,12 @@ ${selectors.join(",\n")} {
         '.aT5-aOt-I-JX-Jw[style*="calendar_"]'
       ]),
       replacementRule("contacts", runtimeUrl(iconPath("contacts")), [
-        '.Yb-Il-d-c-j[style*="contacts_"]'
+        '[style*="productlogos/contacts_"]',
+        '[style*="logo_contacts_"]',
+        '.app-switcher-button-icon-container[style*="contacts_"]',
+        '.aT5-aOt-I-JX-Jw[style*="contacts_"]',
+        '.Yb-Il-d-c-j[style*="contacts_"]',
+        '.DWWcKd-OomVLb-LgbsSe-Bz112c-haAclf[style*="contacts_"]'
       ]),
       replacementRule("keep", runtimeUrl(iconPath("keep")), [
         '.app-switcher-button[data-guest-app-id="2"] .app-switcher-button-icon-container',

@@ -175,6 +175,8 @@ h2 {
   transition: border-color 150ms ease, background 150ms ease, transform 150ms ease;
 }
 
+
+
 .surface-option:hover {
   transform: translateY(-1px);
   border-color: #c4d7ff;
@@ -935,6 +937,8 @@ button.secondary-button:hover {
   .apps-list {
     grid-template-columns: 1fr;
   }
+
+  
 
   .app-card.is-open {
     grid-column: auto;
