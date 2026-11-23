@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "__MSG_extDescription__",
   "icons": {
     "16": "extension_icons/icon-16.png",
@@ -34,6 +34,8 @@
         "https://mail.google.com/*",
         "https://maps.google.com/*",
         "https://meet.google.com/*",
+        "https://google.com/*",
+        "https://www.google.com/*",
         "https://www.google.com/maps*",
         "https://www.google.com/maps/*",
         "https://vids.google.com/*",
@@ -59,6 +61,17 @@
         "https://docs.google.com/*upload*",
         "https://drive.google.com/*upload*"
       ]
+    },
+    {
+      "matches": [
+        "https://google.com/*",
+        "https://www.google.com/*"
+      ],
+      "js": [
+        "cwi-settings.js",
+        "google-homepage-wordmark.js"
+      ],
+      "run_at": "document_start"
     },
     {
       "matches": [
@@ -107,7 +120,6 @@
         "https://chat.google.com/*",
         "https://maps.google.com/*",
         "https://www.google.com/*",
-        "https://www.google.cat/*",
         "https://ogs.google.com/*",
         "https://vids.google.com/*",
         "https://tasks.google.com/*",
@@ -180,7 +192,6 @@
         "https://chat.google.com/*",
         "https://maps.google.com/*",
         "https://www.google.com/*",
-        "https://www.google.cat/*",
         "https://ogs.google.com/*",
         "https://vids.google.com/*",
         "https://tasks.google.com/*",
@@ -217,10 +228,11 @@
         "icons/calendar-legacy-days/*",
         "icons/legacy-2014-2020/*",
         "icons/legacy-earlier-eras/*",
-        "icons/contacts-legacy/*"
+        "icons/contacts-legacy/*",
+        "icons/google-search-legacy/*",
+        "icons/google-search-wordmarks/*"
       ],
       "matches": [
-        "https://*.google.cat/*",
         "https://*.google.com/*",
         "https://calendar.google.com/*",
         "https://chat.google.com/*",
@@ -244,7 +256,6 @@
     "storage"
   ],
   "host_permissions": [
-    "https://*.google.cat/*",
     "https://*.google.com/*",
     "https://calendar.google.com/*",
     "https://docs.google.com/*",

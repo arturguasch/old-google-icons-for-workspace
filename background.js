@@ -150,7 +150,6 @@ async function notifyTabsRingRefresh() {
     const tabs = await chrome.tabs.query({
       url: [
         "https://*.google.com/*",
-        "https://*.google.cat/*",
         "https://one.google.com/*",
         "https://mail.google.com/*",
         "https://drive.google.com/*",
