@@ -20,10 +20,13 @@
     "sites",
     "photos",
     "wallet",
+    "search",
+    "searchWordmark",
     "ring"
   ];
   const SURFACE_KEYS = ["favicon", "header", "launcher", "sidePanel", "meetButton"];
   const DEFAULT_DESIGN_ID = "2020";
+  const DEFAULT_DESIGN_IDS = { search: "2015", searchWordmark: "2015" };
   let customIconCache = {};
   const ICON_DESIGNS = {
     gmail: [
@@ -63,9 +66,9 @@
       { id: "2014-2020", label: "2014–2020 · Classic Forms", path: "icons/legacy-2014-2020/2014_forms.svg" }
     ],
     meet: [
+      { id: "2022", label: "2022 · Original green Meet", path: "icons/legacy-2014-2020/2022_meet.png" },
       { id: "2020", label: "2020 · Four-color camera", path: "icons/meet-classic.svg" },
-      { id: "2017-2020", label: "2017–2020 · Hangouts Meet", path: "icons/legacy-2014-2020/2017_meet_favicon.png" },
-      { id: "2022", label: "2022 · Original green Meet", path: "icons/legacy-2014-2020/2022_meet.png" }
+      { id: "2017-2020", label: "2017–2020 · Hangouts Meet", path: "icons/legacy-2014-2020/2017_meet_hangouts_1024.png" }
     ],
     chat: [
       { id: "2020", label: "2020 · Workspace colors", path: "icons/chat-classic.svg" },
@@ -96,6 +99,23 @@
     wallet: [
       { id: "2020", label: "2020 · Workspace colors", path: "icons/wallet-classic.svg" },
       { id: "2015", label: "2015 · Classic Wallet", path: "icons/legacy-2014-2020/2015_wallet.svg" }
+    ],
+    search: [
+      { id: "2015", label: "2015–2025 · Multicolor G", path: "icons/google-search-legacy/2015_google_g.svg" },
+      { id: "2012-shiny", label: "2012–2013 · Shiny G", path: "icons/google-search-legacy/2012_google_icon_shiny.svg" },
+      { id: "2010", label: "2010–2015 · Classic G", path: "icons/google-search-legacy/2010_google_icon.svg" },
+      { id: "2009", label: "2009–2012 · Classic favicon", path: "icons/google-search-legacy/2009_google_favicon_vector.svg" },
+      { id: "2008", label: "2008–2009 · Classic favicon", path: "icons/google-search-legacy/2008_google_favicon.png" },
+      { id: "1999", label: "1999–2008 · Original favicon", path: "icons/google-search-legacy/1999_google_favicon.png" }
+    ],
+    searchWordmark: [
+      { id: "2015", label: "2015–2026 · Product Sans", path: "icons/google-search-wordmarks/2015_google_product_sans_wordmark.png" },
+      { id: "2013", label: "2013–2015 · Flat Catull", path: "icons/google-search-wordmarks/2013_google_flat_wordmark.png" },
+      { id: "2010", label: "2010–2013 · Catull with shadow", path: "icons/google-search-wordmarks/2010_google_catull_wordmark.png" },
+      { id: "1999", label: "1999–2010 · Catull", path: "icons/google-search-wordmarks/1999_google_catull_wordmark.png" },
+      { id: "1998-exclamation", label: "1998–1999 · Google!", path: "icons/google-search-wordmarks/1998_google_exclamation_wordmark.png" },
+      { id: "1998-green", label: "Sep–Oct 1998 · Green G", path: "icons/google-search-wordmarks/1998_google_green_g_wordmark.png" },
+      { id: "1997", label: "1997–1998 · First Google wordmark", path: "icons/google-search-wordmarks/1997_google_wordmark.png" }
     ]
   };
 
@@ -202,7 +222,7 @@
         const designs = getIconDesigns(app);
         const requested = sourceIconStyles[app];
         const selected = designs.find((design) => design.id === requested);
-        return [app, selected?.id || DEFAULT_DESIGN_ID];
+        return [app, selected?.id || DEFAULT_DESIGN_IDS[app] || DEFAULT_DESIGN_ID];
       })),
       customIconsEnabled: Object.fromEntries(APP_KEYS.map((app) => [
         app,

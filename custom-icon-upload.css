@@ -32,6 +32,7 @@ h1 { margin: 0; font-size: clamp(22px, 5vw, 30px); letter-spacing: -.03em; }
 .drop-zone:hover, .drop-zone:focus-visible, .drop-zone.is-dragging { border-color: var(--accent); outline: none; background: color-mix(in srgb, var(--accent-soft), var(--accent) 9%); }
 .drop-zone.is-dragging { transform: scale(1.015); }
 .drop-zone img { width: 86px; height: 86px; object-fit: contain; }
+body.is-logo-upload .drop-zone img { width: min(100%, 280px); height: 90px; }
 .drop-prompt { display: flex; flex-direction: column; gap: 5px; color: var(--ink); }
 .drop-prompt strong { font-size: 15px; }
 .drop-prompt small { color: var(--muted); font-size: 13px; }

@@ -3,7 +3,8 @@
     gmail: "Gmail", calendar: "Calendar", drive: "Drive", docs: "Docs",
     sheets: "Sheets", slides: "Slides", forms: "Forms", meet: "Meet",
     chat: "Chat", contacts: "Contacts", keep: "Keep", maps: "Maps", vids: "Vids", tasks: "Tasks",
-    voice: "Voice", sites: "Sites", photos: "Photos", wallet: "Wallet"
+    voice: "Voice", sites: "Sites", photos: "Photos", wallet: "Wallet",
+    searchWordmark: "Google homepage logo"
   };
   const params = new URLSearchParams(location.search);
   const app = params.get("app");
@@ -14,6 +15,7 @@
   const dropZone = document.getElementById("dropZone");
   const dropPrompt = document.getElementById("dropPrompt");
   const status = document.getElementById("status");
+  const isWideLogo = app === "searchWordmark";
 
   if (!Object.hasOwn(APP_LABELS, app) || !settings) {
     document.getElementById("uploadTitle").textContent = "App not found";
@@ -23,6 +25,13 @@
   }
 
   appName.textContent = APP_LABELS[app];
+  if (isWideLogo) {
+    document.body.classList.add("is-logo-upload");
+    document.title = "Choose a custom logo · Old Google Icons";
+    document.querySelector("h1").textContent = "Choose a custom logo";
+    document.getElementById("uploadTitle").textContent = "Your logo";
+    document.querySelector(".hint").textContent = "Wide PNG, JPG or WebP · 160–4096 × 32–2048 px · 2:1–10:1 ratio · max. 5 MB. Fitted to 816 × 276 px.";
+  }
 
   async function convertImage(file) {
     if (!file || !["image/png", "image/jpeg", "image/webp"].includes(file.type)) {
@@ -32,16 +41,32 @@
 
     const bitmap = await createImageBitmap(file);
     try {
-      if (bitmap.width !== bitmap.height) throw new Error("The image must be square (1:1).");
-      if (bitmap.width < 32 || bitmap.width > 2048) {
-        throw new Error("Use an image between 32 × 32 and 2048 × 2048 pixels.");
+      if (isWideLogo) {
+        const ratio = bitmap.width / bitmap.height;
+        if (bitmap.width < 160 || bitmap.width > 4096 || bitmap.height < 32 || bitmap.height > 2048) {
+          throw new Error("Use a logo between 160–4096 px wide and 32–2048 px high.");
+        }
+        if (ratio < 2 || ratio > 10) throw new Error("The logo must be wide, with a 2:1–10:1 ratio.");
+      } else {
+        if (bitmap.width !== bitmap.height) throw new Error("The image must be square (1:1).");
+        if (bitmap.width < 32 || bitmap.width > 2048) {
+          throw new Error("Use an image between 32 × 32 and 2048 × 2048 pixels.");
+        }
       }
       const canvas = document.createElement("canvas");
-      canvas.width = 128;
-      canvas.height = 128;
-      canvas.getContext("2d", { alpha: true }).drawImage(bitmap, 0, 0, 128, 128);
+      canvas.width = isWideLogo ? 816 : 128;
+      canvas.height = isWideLogo ? 276 : 128;
+      const context = canvas.getContext("2d", { alpha: true });
+      if (isWideLogo) {
+        const scale = Math.min(canvas.width / bitmap.width, canvas.height / bitmap.height);
+        const width = bitmap.width * scale;
+        const height = bitmap.height * scale;
+        context.drawImage(bitmap, (canvas.width - width) / 2, (canvas.height - height) / 2, width, height);
+      } else {
+        context.drawImage(bitmap, 0, 0, 128, 128);
+      }
       const blob = await new Promise((resolve) => canvas.toBlob(resolve, "image/webp", 0.88));
-      if (!blob || blob.size > 64 * 1024) throw new Error("This image could not be optimized. Try a simpler image.");
+      if (!blob || blob.size > (isWideLogo ? 96 * 1024 : 64 * 1024)) throw new Error("This image could not be optimized. Try a simpler image.");
       return await new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => resolve(reader.result);
@@ -76,7 +101,7 @@
     if (!file) return;
     input.disabled = true;
     status.className = "status";
-    status.textContent = "Preparing and saving your icon…";
+    status.textContent = `Preparing and saving your ${isWideLogo ? "logo" : "icon"}…`;
     try {
       const dataUrl = await convertImage(file);
       await saveIcon(dataUrl);
@@ -84,7 +109,7 @@
       preview.hidden = false;
       dropPrompt.hidden = true;
       status.className = "status is-success";
-      status.textContent = `${APP_LABELS[app]} icon saved. Return to the extension popup to see it.`;
+      status.textContent = `${APP_LABELS[app]} ${isWideLogo ? "logo" : "icon"} saved. Return to the extension popup to see it.`;
     } catch (error) {
       status.className = "status is-error";
       status.textContent = error.message || "Could not save this image.";

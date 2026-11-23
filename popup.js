@@ -15,6 +15,7 @@
     { key: "maps", label: "Maps", icon: "icons/maps-classic.png" },
     { key: "photos", label: "Photos", icon: "icons/photos-classic.png" },
     { key: "tasks", label: "Tasks", icon: "icons/tasks-classic.png" },
+    { key: "search", label: "Google Search", icon: "icons/google-search-legacy/2015_google_g.svg" },
     { key: "chat", label: "Chat", icon: "icons/chat-classic.svg" },
     { key: "contacts", label: "Contacts", icon: "icons/contacts-legacy/2018_contacts.png" },
     { key: "sites", label: "Sites", icon: "icons/sites-classic.svg" },
@@ -23,6 +24,25 @@
     { key: "vids", label: "Vids", icon: "icons/vids-classic.png" },
     { key: "ring", label: "Account ring", icon: "icons/account-ring-classic.svg" }
   ];
+  const SEARCH_WORDMARK = {
+    key: "searchWordmark",
+    label: "Google homepage logo",
+    icon: "icons/google-search-legacy/2015_google_g.svg"
+  };
+  const SEARCH_WORDMARK_IMAGE_SPEC = {
+    title: "Custom logo",
+    removeLabel: "Remove custom logo",
+    hint: "Saved on this device · PNG, JPG or WebP · wide image, 2:1–10:1 · 160–4096 × 32–2048 px · max. 5 MB. Fitted to 816 × 276.",
+    minWidth: 160,
+    maxWidth: 4096,
+    minHeight: 32,
+    maxHeight: 2048,
+    minAspectRatio: 2,
+    maxAspectRatio: 10,
+    canvasWidth: 816,
+    canvasHeight: 276,
+    maxOutputBytes: 96 * 1024
+  };
 
   const SURFACES = [
     { key: "favicon", label: "Browser tab & bookmarks", shortLabel: "Tab & bookmarks", detail: "Icon shown in tabs and bookmarks", icon: '<rect x="4" y="3.5" width="16" height="17" rx="3"/><path d="M4 8h16"/><circle cx="8" cy="6" r=".6"/><circle cx="11" cy="6" r=".6"/>' },
@@ -54,6 +74,8 @@
   }
 
   function appSupportsSurface(app, surface) {
+    if (app.key === "searchWordmark") return false;
+    if (app.key === "search") return surface.key === "favicon";
     if (app.key === "ring") return surface.key === "header";
     if (surface.key === "meetButton") return app.key === "meet";
     if (surface.key === "sidePanel") return SIDE_PANEL_APPS.has(app.key);
@@ -140,7 +162,9 @@
 
   function updateAppSummary(appKey) {
     const card = appsList.querySelector(`[data-app="${appKey}"]`);
-    const app = APPS.find((item) => item.key === appKey);
+    const app = appKey === SEARCH_WORDMARK.key
+      ? SEARCH_WORDMARK
+      : APPS.find((item) => item.key === appKey);
     if (!card || !app) return;
 
     const summary = card.querySelector(".app-summary-state");
@@ -160,13 +184,15 @@
     const designName = options.customIconsEnabled[app.key]
       ? "Custom icon"
       : design?.label?.split(" · ")[0] || "Classic";
-    summary.textContent = selected === 0
+    summary.textContent = app.key === "searchWordmark"
+      ? `${designName} · Wordmark`
+      : selected === 0
       ? `${designName} · No locations`
       : `${designName} · ${selected}/${total} locations`;
     card.dataset.enabled = "true";
   }
 
-  function makeDesignPicker(app, icon) {
+  function makeDesignPicker(app, icon, includeCustom = true, customImageSpec = null) {
     const designs = settings.getIconDesigns(app.key);
     const wrapper = document.createElement("div");
     wrapper.className = "icon-design-options";
@@ -201,6 +227,7 @@
 
     const customCard = document.createElement("section");
     customCard.className = "icon-design-card custom-design-card";
+    if (customImageSpec) customCard.classList.add("custom-logo-card");
     const customHeading = document.createElement("div");
     customHeading.className = "custom-design-heading";
     const customPreview = document.createElement("img");
@@ -210,7 +237,7 @@
     const customTitleWrap = document.createElement("span");
     customTitleWrap.className = "custom-title-wrap";
     const customTitle = document.createElement("strong");
-    customTitle.textContent = "Custom icon";
+    customTitle.textContent = customImageSpec?.title || "Custom icon";
     const customStatus = document.createElement("small");
     customStatus.className = "custom-design-status";
     customTitleWrap.append(customTitle, customStatus);
@@ -239,11 +266,11 @@
 
     const customHint = document.createElement("small");
     customHint.className = "custom-design-hint";
-    customHint.textContent = "Choose an image in the page that opens · Saved on this device · PNG, JPG or WebP · 1:1 · 32–2048 px · max. 5 MB. Resized to 128 × 128.";
+    customHint.textContent = customImageSpec?.hint || "Choose an image in the page that opens · Saved on this device · PNG, JPG or WebP · 1:1 · 32–2048 px · max. 5 MB. Resized to 128 × 128.";
     const removeButton = document.createElement("button");
     removeButton.type = "button";
     removeButton.className = "custom-remove-button";
-    removeButton.textContent = "Remove custom icon";
+    removeButton.textContent = customImageSpec?.removeLabel || "Remove custom icon";
     removeButton.hidden = true;
     const customMessage = document.createElement("small");
     customMessage.className = "custom-design-message";
@@ -358,13 +385,16 @@
 
     classicCard.append(classicTitle, designPicker);
     designPicker.append(trigger, menu);
-    wrapper.append(classicCard, customCard);
+    wrapper.append(classicCard);
+    if (includeCustom) wrapper.append(customCard);
     renderDesignMenu();
     updateCustomControls();
-    settings.getCustomIcons().then((icons) => {
-      customIcon = icons[app.key] || "";
-      updateCustomControls();
-    });
+    if (includeCustom) {
+      settings.getCustomIcons().then((icons) => {
+        customIcon = icons[app.key] || "";
+        updateCustomControls();
+      });
+    }
     return wrapper;
   }
 
@@ -408,6 +438,12 @@
       }
 
       identity.append(icon, copy);
+      if (app.key === "search") {
+        const domainWarning = document.createElement("span");
+        domainWarning.className = "domain-warning";
+        domainWarning.textContent = "Only works on google.com";
+        identity.append(domainWarning);
+      }
       if (!standalone) {
         const chevron = document.createElement("span");
         chevron.className = "app-chevron";
@@ -457,6 +493,12 @@
           grid.append(makeSurfaceControl(app, surface));
         }
         details.append(designPicker, detailsTitle, grid);
+        if (app.key === "search") {
+          const searchHint = document.createElement("p");
+          searchHint.className = "app-location-hint";
+          searchHint.textContent = "Google Search changes its tab and bookmark icon.";
+          details.append(searchHint);
+        }
 
         identity.setAttribute("aria-controls", details.id);
         const isOpen = openApps.has(app.key);
@@ -476,7 +518,83 @@
       if (details) card.append(details);
       appsList.append(card);
       updateAppSummary(app.key);
+      if (app.key === "search") renderSearchWordmarkCard(openApps);
     }
+  }
+
+  function renderSearchWordmarkCard(openApps) {
+    const app = SEARCH_WORDMARK;
+    const card = document.createElement("article");
+    card.className = "app-card";
+    card.dataset.app = app.key;
+
+    const row = document.createElement("div");
+    row.className = "app-row";
+    const identity = document.createElement("button");
+    identity.type = "button";
+    identity.className = "app-identity";
+    identity.setAttribute("aria-expanded", "false");
+    const icon = document.createElement("img");
+    icon.alt = "";
+    icon.src = chrome.runtime.getURL(app.icon);
+    icon.className = "app-icon";
+    const copy = document.createElement("span");
+    copy.className = "app-identity-copy";
+    const name = document.createElement("strong");
+    name.textContent = app.label;
+    const summary = document.createElement("small");
+    summary.className = "app-summary-state";
+    copy.append(name, summary);
+    identity.append(icon, copy);
+    const domainWarning = document.createElement("span");
+    domainWarning.className = "domain-warning";
+    domainWarning.textContent = "Only works on google.com";
+    identity.append(domainWarning);
+    const chevron = document.createElement("span");
+    chevron.className = "app-chevron";
+    chevron.setAttribute("aria-hidden", "true");
+    identity.append(chevron);
+
+    const switchLabel = document.createElement("label");
+    switchLabel.className = "switch app-switch";
+    switchLabel.setAttribute("aria-label", "Enable Google homepage logo replacement");
+    const toggle = document.createElement("input");
+    toggle.type = "checkbox";
+    toggle.checked = options.apps[app.key] !== false;
+    toggle.addEventListener("change", () => {
+      options.apps[app.key] = toggle.checked;
+      updateAppSummary(app.key);
+      saveOptions();
+    });
+    switchLabel.append(toggle, document.createElement("span"));
+
+    const details = document.createElement("div");
+    details.className = "app-details";
+    details.id = `app-surfaces-${app.key}`;
+    details.hidden = true;
+    details.setAttribute("aria-label", "Google homepage logo design");
+    const picker = makeDesignPicker(app, icon, true, SEARCH_WORDMARK_IMAGE_SPEC);
+    const hint = document.createElement("p");
+    hint.className = "app-location-hint";
+    hint.textContent = "Replaces the large Google wordmark on the homepage.";
+    details.append(picker, hint);
+
+    const isOpen = openApps.has(app.key);
+    identity.setAttribute("aria-controls", details.id);
+    identity.setAttribute("aria-expanded", String(isOpen));
+    details.hidden = !isOpen;
+    if (isOpen) card.classList.add("is-open");
+    identity.addEventListener("click", () => {
+      const expanded = identity.getAttribute("aria-expanded") === "true";
+      identity.setAttribute("aria-expanded", String(!expanded));
+      details.hidden = expanded;
+      card.classList.toggle("is-open", !expanded);
+    });
+
+    row.append(identity, switchLabel);
+    card.append(row, details);
+    appsList.append(card);
+    updateAppSummary(app.key);
   }
 
   function render() {

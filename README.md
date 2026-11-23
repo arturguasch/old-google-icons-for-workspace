@@ -1,8 +1,8 @@
 # Old Google Icons: Customize Workspace Icons
 
-Restore classic Google Workspace icons in browser tabs and bookmarks, app headers, the Google apps menu and supported Workspace side panels. Choose a classic design for each app or use your own image.
+Restore classic Google Workspace icons in browser tabs and bookmarks, app headers, the Google apps menu, supported Workspace side panels and the Meet presentation button in Docs, Slides and Sheets. Choose a classic design for each app or use your own image.
 
-Supported apps: Gmail, Contacts, Calendar, Drive, Docs, Sheets, Slides, Forms, Meet, Chat, Keep, Maps, Vids, Tasks, Voice and Sites, plus Google Photos and Google Wallet. Each app has its own on/off switch. Contacts includes four selectable historical designs from 2015, 2016, 2018–2022 and 2022. Header replacements apply where a supported product logo is detected; the side panel supports Calendar, Contacts, Keep, Maps and Tasks.
+Supported apps: Gmail, Contacts, Calendar, Drive, Docs, Sheets, Slides, Forms, Meet, Chat, Keep, Maps, Vids, Tasks, Voice and Sites, plus Google Photos, Google Wallet and Google Search. Each app has its own on/off switch. Google Search's tab and bookmark icon, and the large logo on the Google homepage, can only be customized on google.com. This does not change your browser's New Tab page—the screen that opens when you click the + button or open a new tab. That screen is part of the browser itself, rather than a Google webpage, so this add-on cannot edit its logo. Google Search offers six distinct historical icon designs from 1999 to 2025. Contacts includes four selectable historical designs from 2015, 2016, 2018–2022 and 2022. Header replacements apply where a supported product logo is detected; the side panel supports Calendar, Contacts, Keep, Maps and Tasks.
 
 My goal with browser extensions is to keep them simple, accessible and free for everyone. I also care a lot about privacy: I do not want to build tools that secretly sell or misuse people's data, as many extensions unfortunately do.
 
@@ -14,7 +14,12 @@ https://addons.mozilla.org/es-ES/firefox/addon/old-google-icons-for-workspace/
 
 The extension was previously named “Old Google Icons for Workspace”. It is now called “Old Google Icons: Customize Workspace Icons” to better describe its classic icon styles and custom icon options.
 
-## What's new in 1.1.0
+## What's new in 1.1.1
+
+- Added Google Search and homepage logo customization. The Google Search tab and bookmark icon, and the large homepage logo, work on google.com only. The browser's New Tab page—the screen opened by the + button—is part of the browser, not a Google webpage, so this add-on cannot change its logo.
+- Replaced the low-resolution 2017–2020 Hangouts Meet icon with a 1024 × 1024 version.
+
+## 1.1.0
 
 - Added a separate control to restore the classic Meet icon on the presentation button in Google Docs, Slides and Sheets.
 - Fixed the Contacts icon replacement in Workspace side panels across supported Google pages, including Docs, Gmail, Calendar and Drive.

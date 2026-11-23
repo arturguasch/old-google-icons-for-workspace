@@ -453,6 +453,25 @@ h2 {
   transform: translateX(16px);
 }
 
+.domain-warning {
+  display: none;
+  flex: 0 0 auto;
+  margin: 0 auto;
+  padding: 6px 9px;
+  border: 1px solid #f0d78b;
+  border-radius: 8px;
+  background: #fff8df;
+  color: #765500;
+  font-size: 9px;
+  font-weight: 750;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.app-card.is-open .domain-warning {
+  display: block;
+}
+
 .app-details {
   padding: 0 10px 11px;
   border-top: 1px solid #edf0f6;
@@ -462,11 +481,22 @@ h2 {
   display: none;
 }
 
+.app-location-hint {
+  margin: 8px 1px 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
 .icon-design-options {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 9px;
   margin: 10px 0 3px;
+}
+
+.icon-design-options.single-design-option {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .icon-design-card {
@@ -607,6 +637,13 @@ h2 {
   border: 1px solid #e6ebf4;
   border-radius: 10px;
   background: white;
+}
+
+.custom-logo-card .custom-design-preview {
+  width: 88px;
+  height: 30px;
+  padding: 2px 5px;
+  border-radius: 8px;
 }
 
 .custom-design-card:not(.has-custom-icon) .custom-design-preview {

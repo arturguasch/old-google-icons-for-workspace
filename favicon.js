@@ -51,6 +51,12 @@
       urlIncludes: ["www.google.com/maps"],
       type: "image/png",
       hardLock: true
+    },
+    search: {
+      icon: "icons/google-search-legacy/2015_google_g.svg",
+      hosts: ["google.com", "www.google.com"],
+      type: "image/svg+xml",
+      hardLock: true
     }
   };
 
